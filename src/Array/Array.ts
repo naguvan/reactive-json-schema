@@ -7,6 +7,14 @@ import { createType, IType, ITypeConfig } from "../Type";
 import { isArray, unique } from "../utils";
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
+import { createMeta, IMeta } from "../Meta";
+
+export type IArrayComponent = "list" | "layout";
+
+export interface IArrayMeta extends IMeta<IArrayComponent> {}
+
+export type IArrayType = "array";
+
 export interface IArrayAttrs extends IValueAttrs<Array<IAnything | null>> {
   readonly additionalItems?: boolean | null;
   readonly minItems?: number | null;
@@ -16,12 +24,17 @@ export interface IArrayAttrs extends IValueAttrs<Array<IAnything | null>> {
 }
 
 export interface IArrayConfig
-  extends IValueConfig<Array<IAnything | null>, "array">,
+  extends IValueConfig<
+      Array<IAnything | null>,
+      IArrayType,
+      IArrayComponent,
+      IArrayMeta
+    >,
     Partial<IArrayAttrs> {}
 
 export interface IArray
   extends IArrayAttrs,
-    IValue<Array<IAnything | null>, "array"> {
+    IValue<Array<IAnything | null>, IArrayType, IArrayComponent, IArrayMeta> {
   readonly elements: IType[];
   readonly dynamic: boolean;
   push(): Promise<void>;
@@ -32,16 +45,26 @@ mappings.array = types.late("Array", createArray);
 
 let NArray: IModelType<Partial<IArrayConfig>, IArray>;
 
+export const ArrayMeta: IModelType<
+  Partial<IArrayMeta>,
+  IArrayMeta
+> = types.compose(
+  "ArrayMeta",
+  createMeta<IArrayComponent>("list", "layout"),
+  types.model({})
+);
+
 export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
   if (!NArray) {
     const Array: IModelType<Partial<IArrayConfig>, IArray> = types
       .compose(
         "Array",
-        createValue<Array<IAnything | null>, "array">(
-          "array",
-          types.array(types.frozen),
-          []
-        ),
+        createValue<
+          Array<IAnything | null>,
+          IArrayType,
+          IArrayComponent,
+          IArrayMeta
+        >("array", types.array(types.frozen), [], ArrayMeta),
         types.model({
           additionalItems: types.maybe(types.boolean),
           elements: types.optional(types.array(types.late(createType)), []),

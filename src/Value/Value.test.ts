@@ -1,13 +1,22 @@
 import { types } from "mobx-state-tree";
 import { createValue, IValueConfig } from "./Value";
 
-const config: IValueConfig<number, "number"> = {
+import { createMeta, IMeta } from "../Meta";
+
+const config: IValueConfig<number, "number", "range", IMeta<"range">> = {
   title: "naguvan",
   type: "number",
   value: 10
 };
 
-const Value = createValue<number, "number">("number", types.number, 0);
+const ValueMeta = createMeta<"range">("range");
+
+const Value = createValue<number, "number", "range", IMeta<"range">>(
+  "number",
+  types.number,
+  0,
+  ValueMeta
+);
 
 test("createValue type type", () => {
   const type = Value.create(config);

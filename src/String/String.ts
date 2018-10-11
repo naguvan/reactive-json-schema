@@ -7,6 +7,19 @@ import { matchers } from "./matchers";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
+import { createMeta, IMeta } from "../Meta";
+
+export type IStringComponent =
+  | "text"
+  | "date"
+  | "password"
+  | "date-time"
+  | "textarea";
+
+export interface IStringMeta extends IMeta<IStringComponent> {
+  readonly length: number;
+}
+
 export type IFormat =
   | "date"
   | "date-time"
@@ -39,6 +52,8 @@ export type IFormat =
   | "utc-millisec"
   | null;
 
+export type IStringType = "string";
+
 export interface IStringAttrs extends IValueAttrs<string> {
   readonly minLength?: number | null;
   readonly maxLength?: number | null;
@@ -47,16 +62,40 @@ export interface IStringAttrs extends IValueAttrs<string> {
 }
 
 export interface IStringConfig
-  extends IValueConfig<string, "string">,
+  extends IValueConfig<string, IStringType, IStringComponent, IStringMeta>,
     Partial<IStringAttrs> {}
 
-export interface IString extends IStringAttrs, IValue<string, "string"> {}
+export interface IString
+  extends IStringAttrs,
+    IValue<string, IStringType, IStringComponent, IStringMeta> {}
+
+export const StringMeta: IModelType<
+  Partial<IStringMeta>,
+  IStringMeta
+> = types.compose(
+  "StringMeta",
+  createMeta<IStringComponent>(
+    "text",
+    "date",
+    "password",
+    "date-time",
+    "textarea"
+  ),
+  types.model({
+    length: types.optional(types.number, undefined)
+  })
+);
 
 // tslint:disable-next-line:variable-name
 export const String: IModelType<Partial<IStringConfig>, IString> = types
   .compose(
     "String",
-    createValue<string, "string">("string", types.string, ""),
+    createValue<string, IStringType, IStringComponent, IStringMeta>(
+      "string",
+      types.string,
+      "",
+      StringMeta
+    ),
     types.model({
       format: types.maybe(
         types.union(

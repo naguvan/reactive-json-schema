@@ -4,13 +4,32 @@ import { mappings } from "../Common";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
+import { createMeta, IMeta } from "../Meta";
+
+export type IBooleanComponent = "radio" | "checkbox" | "switch";
+
+export interface IBooleanMeta extends IMeta<IBooleanComponent> {}
+
+export type IBooleanType = "boolean";
+
 export interface IBooleanAttrs extends IValueAttrs<boolean> {}
 
 export interface IBooleanConfig
-  extends IValueConfig<boolean, "boolean">,
+  extends IValueConfig<boolean, IBooleanType, IBooleanComponent, IBooleanMeta>,
     Partial<IBooleanAttrs> {}
 
-export interface IBoolean extends IBooleanAttrs, IValue<boolean, "boolean"> {}
+export interface IBoolean
+  extends IBooleanAttrs,
+    IValue<boolean, IBooleanType, IBooleanComponent, IBooleanMeta> {}
+
+export const BooleanMeta: IModelType<
+  Partial<IBooleanMeta>,
+  IBooleanMeta
+> = types.compose(
+  "BooleanMeta",
+  createMeta<IBooleanComponent>("radio", "checkbox", "switch"),
+  types.model({})
+);
 
 // tslint:disable-next-line:variable-name
 export const Boolean: IModelType<
@@ -18,7 +37,12 @@ export const Boolean: IModelType<
   IBoolean
 > = types.compose(
   "Boolean",
-  createValue<boolean, "boolean">("boolean", types.boolean, false),
+  createValue<boolean, IBooleanType, IBooleanComponent, IBooleanMeta>(
+    "boolean",
+    types.boolean,
+    false,
+    BooleanMeta
+  ),
   types.model({})
 );
 

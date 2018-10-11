@@ -2,6 +2,11 @@ import { IStringConfig, String } from "./String";
 
 const config: IStringConfig = {
   maxLength: 6,
+  meta: {
+    component: "password",
+    help: "testing",
+    length: 50
+  },
   minLength: 4,
   title: "naguvan",
   type: "string",
@@ -14,6 +19,16 @@ test("create string type", () => {
   expect(type.type).toBe("string");
   expect(type.title).toBe("naguvan");
   expect(type.data).toBe("sk.sk");
+  expect(type.minLength).toBe(4);
+});
+
+test("test string meta", () => {
+  const type = String.create(config);
+
+  expect(type.meta).not.toBeNull();
+  expect(type.meta!.component).toBe("password");
+  expect(type.meta!.help).toBe("testing");
+  expect(type.meta!.length).toBe(50);
   expect(type.minLength).toBe(4);
 });
 

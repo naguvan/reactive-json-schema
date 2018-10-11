@@ -5,6 +5,14 @@ import { decimals } from "../utils";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
+import { createMeta, IMeta } from "../Meta";
+
+export type INumberComponent = "text" | "range" | "slide";
+
+export interface INumberMeta extends IMeta<INumberComponent> {}
+
+export type INumberType = "number";
+
 export interface INumberAttrs extends IValueAttrs<number> {
   readonly minimum?: number | null;
   readonly maximum?: number | null;
@@ -12,16 +20,32 @@ export interface INumberAttrs extends IValueAttrs<number> {
 }
 
 export interface INumberConfig
-  extends IValueConfig<number, "number">,
+  extends IValueConfig<number, INumberType, INumberComponent, INumberMeta>,
     Partial<INumberAttrs> {}
 
-export interface INumber extends INumberAttrs, IValue<number, "number"> {}
+export interface INumber
+  extends INumberAttrs,
+    IValue<number, INumberType, INumberComponent, INumberMeta> {}
+
+export const NumberMeta: IModelType<
+  Partial<INumberMeta>,
+  INumberMeta
+> = types.compose(
+  "NumberMeta",
+  createMeta<INumberComponent>("text", "range", "slide"),
+  types.model({})
+);
 
 // tslint:disable-next-line:variable-name
 export const Number: IModelType<Partial<INumberConfig>, INumber> = types
   .compose(
     "Number",
-    createValue<number, "number">("number", types.number, 0),
+    createValue<number, INumberType, INumberComponent, INumberMeta>(
+      "number",
+      types.number,
+      0,
+      NumberMeta
+    ),
     types.model({
       maximum: types.maybe(types.number),
       minimum: types.maybe(types.number),

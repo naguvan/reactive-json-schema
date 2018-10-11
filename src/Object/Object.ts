@@ -12,6 +12,14 @@ import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
 import { IType, ITypeConfig } from "../Type";
 
+import { createMeta, IMeta } from "../Meta";
+
+export type IObjectComponent = "grid" | "layout" | "list";
+
+export interface IObjectMeta extends IMeta<IObjectComponent> {}
+
+export type IObjectType = "object";
+
 export interface IObjectAttrs extends IValueAttrs<object | null> {
   readonly required?: string[] | null;
   readonly minProperties?: number | null;
@@ -19,13 +27,20 @@ export interface IObjectAttrs extends IValueAttrs<object | null> {
 }
 
 export interface IObjectConfig
-  extends IValueConfig<object | null, "object">,
+  extends IValueConfig<
+      object | null,
+      IObjectType,
+      IObjectComponent,
+      IObjectMeta
+    >,
     Partial<IObjectAttrs> {
   readonly properties?: { [key: string]: ITypeConfig };
   readonly additionalProperties?: boolean | ITypeConfig | null;
 }
 
-export interface IObject extends IObjectAttrs, IValue<object | null, "object"> {
+export interface IObject
+  extends IObjectAttrs,
+    IValue<object | null, IObjectType, IObjectComponent, IObjectMeta> {
   readonly properties?: ReadonlyMap<string, IType> | null;
   readonly additionalProperties?: boolean | IType | null;
   readonly fields: IType[];
@@ -38,15 +53,25 @@ mappings.object = types.late("Object", createObject);
 
 let NObject: IModelType<Partial<IObjectConfig>, IObject>;
 
+export const ObjectMeta: IModelType<
+  Partial<IObjectMeta>,
+  IObjectMeta
+> = types.compose(
+  "ObjectMeta",
+  createMeta<IObjectComponent>("grid", "layout", "list"),
+  types.model({})
+);
+
 export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
   if (!NObject) {
     const XObject = types
       .compose(
         "Object",
-        createValue<object | null, "object">(
+        createValue<object | null, IObjectType, IObjectComponent, IObjectMeta>(
           "object",
           types.map(types.frozen),
-          {}
+          {},
+          ObjectMeta
         ),
         types.model({
           additionalProperties: types.maybe(
