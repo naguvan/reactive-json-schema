@@ -274,7 +274,7 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         },
         get valid(): boolean {
           return (
-            it.errors!.length === 0 &&
+            it.meta.errors!.length === 0 &&
             it.elements.every(element => element!.valid)
           );
         },

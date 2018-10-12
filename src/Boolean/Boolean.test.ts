@@ -36,7 +36,7 @@ describe("Boolean testing", () => {
 
   test("change boolean name type", () => {
     const type = Boolean.create(config);
-    type.setName("senthilnathan");
+    type.meta.setName("senthilnathan");
     expect(type.meta.name).toBe("senthilnathan");
   });
 });

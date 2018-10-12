@@ -39,7 +39,7 @@ describe("Number testing", () => {
 
   test("change number name type", () => {
     const type = Number.create(config);
-    type.setName("senthilnathan");
+    type.meta.setName("senthilnathan");
     expect(type.meta.name).toBe("senthilnathan");
   });
 
@@ -52,7 +52,7 @@ describe("Number testing", () => {
     await type.validate();
 
     // expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate minimum invalid", async () => {
@@ -64,7 +64,9 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual(["should NOT be lesser than 10"]);
+    expect(type.meta.errors!.slice(0)).toEqual([
+      "should NOT be lesser than 10"
+    ]);
   });
 
   test("validate maximum valid", async () => {
@@ -76,7 +78,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate maximum invalid", async () => {
@@ -88,7 +90,9 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual(["should NOT be greater than 10"]);
+    expect(type.meta.errors!.slice(0)).toEqual([
+      "should NOT be greater than 10"
+    ]);
   });
 
   test("test invalid multipleOf configuration", () => {
@@ -116,7 +120,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate multipleOf invalid", async () => {
@@ -128,7 +132,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual(["should be multiple of 3"]);
+    expect(type.meta.errors!.slice(0)).toEqual(["should be multiple of 3"]);
   });
 
   test("validate const valid", async () => {
@@ -140,7 +144,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate const invalid", async () => {
@@ -152,7 +156,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
+    expect(type.meta.errors!.slice(0)).toEqual(["should be equal to 5"]);
   });
 
   test("validate enum valid", async () => {
@@ -164,7 +168,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate enum invalid", async () => {
@@ -176,7 +180,7 @@ describe("Number testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual([
+    expect(type.meta.errors!.slice(0)).toEqual([
       "should be equal to one of the allowed values [5, 20]"
     ]);
   });

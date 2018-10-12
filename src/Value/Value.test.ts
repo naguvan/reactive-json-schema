@@ -43,7 +43,7 @@ test("createValue type type", () => {
   expect(type.meta.visible).toBe(true);
 
   expect(type.validating).toBe(false);
-  expect(type.errors!.length).toBe(0);
+  expect(type.meta.errors!.length).toBe(0);
 });
 
 test("change type value", () => {
@@ -66,7 +66,7 @@ test("change type value", () => {
 test("change type name", () => {
   const type = Value.create(config);
 
-  type.setName("skclusive");
+  type.meta.setName("skclusive");
   expect(type.meta.name).toBe("skclusive");
 });
 
@@ -75,7 +75,7 @@ test("change mandatory property", () => {
 
   expect(type.meta.mandatory).toBe(false);
 
-  type.setMandatory(true);
+  type.meta.setMandatory(true);
   expect(type.meta.mandatory).toBe(true);
 });
 
@@ -89,7 +89,7 @@ test("change disabled property", () => {
 
   expect(type.meta.disabled).toBe(true);
 
-  type.setDisabled(false);
+  type.meta.setDisabled(false);
   expect(type.meta.disabled).toBe(false);
 });
 
@@ -103,25 +103,25 @@ test("change visible property", () => {
 
   expect(type.meta.visible).toBe(false);
 
-  type.setDisabled(false);
+  type.meta.setDisabled(false);
   expect(type.meta.visible).toBe(false);
 
-  type.setVisible(true);
+  type.meta.setVisible(true);
   expect(type.meta.visible).toBe(true);
 });
 
 test("change error property", () => {
   const type = Value.create(config);
 
-  expect(type.errors!.length).toBe(0);
+  expect(type.meta.errors!.length).toBe(0);
   expect(type.valid).toBe(true);
 
-  type.addError("this type has some error");
-  expect(type.errors!.slice(0)).toEqual(["this type has some error"]);
+  type.meta.addError("this type has some error");
+  expect(type.meta.errors!.slice(0)).toEqual(["this type has some error"]);
   expect(type.valid).toBe(false);
 
   type.reset();
-  expect(type.errors!.length).toBe(0);
+  expect(type.meta.errors!.length).toBe(0);
   expect(type.valid).toBe(true);
 });
 
@@ -146,7 +146,7 @@ test("validate const valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
+  expect(type.meta.errors!.slice(0)).toEqual([]);
 });
 
 test("validate const invalid", async () => {
@@ -158,7 +158,7 @@ test("validate const invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
+  expect(type.meta.errors!.slice(0)).toEqual(["should be equal to 5"]);
 });
 
 test("validate enum valid", async () => {
@@ -170,7 +170,7 @@ test("validate enum valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
+  expect(type.meta.errors!.slice(0)).toEqual([]);
 });
 
 test("validate enum invalid", async () => {
@@ -182,7 +182,7 @@ test("validate enum invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual([
+  expect(type.meta.errors!.slice(0)).toEqual([
     "should be equal to one of the allowed values [5, 20]"
   ]);
 });

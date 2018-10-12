@@ -56,7 +56,7 @@ test("validate minLength valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
+  expect(type.meta.errors!.slice(0)).toEqual([]);
 });
 
 test("validate minLength invalid", async () => {
@@ -68,7 +68,7 @@ test("validate minLength invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual([
+  expect(type.meta.errors!.slice(0)).toEqual([
     "should NOT be shorter than 4 characters"
   ]);
 });
@@ -82,7 +82,7 @@ test("validate maxLength valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
+  expect(type.meta.errors!.slice(0)).toEqual([]);
 });
 
 test("validate maxLength invalid", async () => {
@@ -94,7 +94,7 @@ test("validate maxLength invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual([
+  expect(type.meta.errors!.slice(0)).toEqual([
     "should NOT be longer than 6 characters"
   ]);
 });
@@ -122,7 +122,7 @@ test("test valid pattern", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
+  expect(type.meta.errors!.slice(0)).toEqual([]);
 });
 
 test("test invalid pattern", async () => {
@@ -139,7 +139,7 @@ test("test invalid pattern", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual([
+  expect(type.meta.errors!.slice(0)).toEqual([
     "should match pattern /^(2[0-4]|[01][0-9]):([0-5][0-9]):(60|[0-5][0-9])$/"
   ]);
 });

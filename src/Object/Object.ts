@@ -150,7 +150,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
         },
         get valid(): boolean {
           return (
-            it.errors!.length === 0 &&
+            it.meta.errors!.length === 0 &&
             it
               .getProperties()
               .every(property => it.getProperty(property)!.valid)
@@ -181,7 +181,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
 
           if (it.properties) {
             for (const [key, field] of it.properties.entries()) {
-              field.setName(key);
+              field.meta.setName(key);
               if (!field.title) {
                 field.setTitle(key);
               }
@@ -192,7 +192,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
             for (const required of it.required) {
               const property = it.getProperty(required);
               if (property) {
-                property.setMandatory(true);
+                property.meta.setMandatory(true);
               }
             }
           }
@@ -284,7 +284,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
           it.updateProps(toJS(value));
         },
         reset(): void {
-          it.errors!.length = 0;
+          it.meta.errors!.length = 0;
           it.fields.forEach(field => field.reset());
         }
       }))

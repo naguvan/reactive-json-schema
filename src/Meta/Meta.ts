@@ -4,6 +4,7 @@ export interface IMetaAttrs<T> {
   readonly component?: T | null;
   readonly help?: string | null;
   readonly sequence?: number | null;
+  readonly errors?: string[] | null;
 }
 
 export interface IMetaConfig<T> extends IMetaAttrs<T> {
@@ -18,10 +19,14 @@ export interface IMeta<T> extends IMetaAttrs<T> {
   readonly disabled: boolean;
   readonly visible: boolean;
   readonly mandatory: boolean;
+  readonly valid: boolean;
   setName(name: string): void;
   setMandatory(mandatory: boolean): void;
   setDisabled(disabled: boolean): void;
   setVisible(visible: boolean): void;
+  addError(error: string): void;
+  addErrors(errors: string[]): void;
+  clearErrors(): void;
 }
 
 export function createMeta<
@@ -36,6 +41,7 @@ export function createMeta<
         components
       ) as ISimpleType<T>),
       disabled: types.optional(types.boolean, false),
+      errors: types.optional(types.array(types.string), []),
       help: types.maybe(types.string),
       mandatory: types.optional(types.boolean, false),
       name: types.optional(types.string, ""),
@@ -54,6 +60,20 @@ export function createMeta<
       },
       setVisible(visible: boolean): void {
         it.visible = visible;
+      },
+      addError(error: string): void {
+        it.errors.push(error);
+      },
+      addErrors(errors: string[]): void {
+        it.errors.push(...errors);
+      },
+      clearErrors(): void {
+        it.errors.length = 0;
+      }
+    }))
+    .views(it => ({
+      get valid(): boolean {
+        return it.errors!.length === 0;
       }
     })) as any;
   return Meta;

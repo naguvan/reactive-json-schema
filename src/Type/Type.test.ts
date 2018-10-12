@@ -115,10 +115,10 @@ test("create array type", () => {
 test("test snapshot create", () => {
   const config: IObjectConfig = {
     additionalProperties: null,
-    errors: [],
     maxProperties: null,
     meta: {
       disabled: false,
+      errors: [],
       mandatory: false,
       name: "",
       visible: true
@@ -127,10 +127,10 @@ test("test snapshot create", () => {
     properties: {
       age: {
         default: 0,
-        errors: [],
         initial: 0,
         meta: {
           disabled: false,
+          errors: [],
           mandatory: false,
           name: "",
           visible: true
@@ -141,9 +141,9 @@ test("test snapshot create", () => {
         value: 0
       },
       name: {
-        errors: [],
         meta: {
           disabled: false,
+          errors: [],
           length: 30,
           mandatory: false,
           name: "",

@@ -14,7 +14,6 @@ export interface IValueAttrs<V> {
   readonly enum?: V[] | null;
   readonly const?: V | null;
   readonly options?: Array<{ label: string; value: V }> | null;
-  readonly errors?: string[] | null;
 }
 
 export interface IValueConfig<V, T, C, M extends IMetaConfig<C>>
@@ -35,19 +34,12 @@ export interface IValue<
   readonly modified: boolean;
   readonly validating: boolean;
   readonly syncing: boolean;
-  readonly valid: boolean;
-  // readonly errors: string[];
-  // readonly initial: V;
   readonly data: V;
+  readonly valid: boolean;
+
   setValue(value: V): void;
   setTitle(title: string): void;
-  setName(name: string): void;
-  setMandatory(mandatory: boolean): void;
-  setDisabled(disabled: boolean): void;
-  setVisible(visible: boolean): void;
-  addError(error: string): void;
-  addErrors(errors: string[]): void;
-  clearErrors(): void;
+
   reset(): void;
   validate(): Promise<void>;
 
@@ -87,7 +79,6 @@ export function createValue<
         const: types.maybe(kind),
         default: types.optional(kind, defaultv),
         enum: types.maybe(types.array(kind)),
-        errors: types.optional(types.array(types.string), []),
         initial: types.optional(kind, defaultv),
         options: types.maybe(
           types.array(types.model({ label: types.string, value: kind }))
@@ -119,27 +110,6 @@ export function createValue<
       },
       setTitle(title: string): void {
         it.title = title;
-      },
-      setName(name: string): void {
-        it.meta.setName(name);
-      },
-      setMandatory(mandatory: boolean): void {
-        it.meta.setMandatory(mandatory);
-      },
-      setDisabled(disabled: boolean): void {
-        it.meta.setDisabled(disabled);
-      },
-      setVisible(visible: boolean): void {
-        it.meta.setVisible(visible);
-      },
-      addError(error: string): void {
-        it.errors.push(error);
-      },
-      addErrors(errors: string[]): void {
-        it.errors.push(...errors);
-      },
-      clearErrors(): void {
-        it.errors.length = 0;
       },
       tryValue(value: IAnything): boolean {
         return kind.is(value);
@@ -205,7 +175,7 @@ export function createValue<
         return it.value !== it.initial;
       },
       get valid(): boolean {
-        return it.errors.length === 0;
+        return it.meta.valid;
       },
       get data(): V {
         return toJS(it.value);
@@ -217,15 +187,15 @@ export function createValue<
     .actions(it => ({
       reset(): void {
         it.value = it.initial;
-        it.clearErrors();
+        it.meta.clearErrors();
       },
       validate: flow<void>(function*() {
         if (it.syncing /*|| it.validating*/) {
           return [];
         }
-        it.clearErrors();
+        it.meta.clearErrors();
         it._validating = true;
-        it.addErrors(yield it.tryValidate(it.value));
+        it.meta.addErrors(yield it.tryValidate(it.value));
         it._validating = false;
       })
     }))

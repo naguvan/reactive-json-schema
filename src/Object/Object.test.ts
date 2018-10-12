@@ -138,7 +138,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate minProperties invalid", async () => {
@@ -150,7 +150,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual([
+    expect(type.meta.errors!.slice(0)).toEqual([
       "should NOT have less than 2 properties"
     ]);
   });
@@ -164,7 +164,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate maxProperties invalid", async () => {
@@ -176,7 +176,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual([
+    expect(type.meta.errors!.slice(0)).toEqual([
       "should NOT have more than 1 properties"
     ]);
   });
@@ -208,7 +208,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate missing required properties", async () => {
@@ -235,8 +235,8 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual([]);
-    expect(type.getProperty("age")!.errors!.slice(0)).toEqual([
+    expect(type.meta.errors!.slice(0)).toEqual([]);
+    expect(type.getProperty("age")!.meta.errors!.slice(0)).toEqual([
       "Field is required"
     ]);
   });
@@ -260,7 +260,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate not allowing additionalProperties", async () => {
@@ -282,7 +282,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual([
+    expect(type.meta.errors!.slice(0)).toEqual([
       `should NOT have additional properties [city, country]`
     ]);
   });
@@ -309,7 +309,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("validate additionalProperties not allowed types", async () => {
@@ -334,7 +334,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(false);
-    expect(type.errors!.slice(0)).toEqual([
+    expect(type.meta.errors!.slice(0)).toEqual([
       `additional property 'city' is not a number`,
       `additional property 'country' is not a number`
     ]);
@@ -360,7 +360,7 @@ describe("Object testing", () => {
     await type.validate();
 
     expect(type.valid).toBe(true);
-    expect(type.errors!.slice(0)).toEqual([]);
+    expect(type.meta.errors!.slice(0)).toEqual([]);
   });
 
   test("get configured property", async () => {
@@ -475,7 +475,7 @@ describe("Object testing", () => {
 
     expect(city.properties!.get("name")!.data).toBe("manamadurai");
     expect(city.properties!.get("name")!.valid).toBe(false);
-    expect(toJS(city.properties!.get("name")!.errors)).toEqual([
+    expect(toJS(city.properties!.get("name")!.meta.errors)).toEqual([
       "should NOT be longer than 7 characters"
     ]);
   });
@@ -510,7 +510,7 @@ describe("Object testing", () => {
 
     expect(city.properties!.get("name")!.data).toBe("manamadurai");
     expect(city.properties!.get("name")!.valid).toBe(false);
-    expect(toJS(city.properties!.get("name")!.errors)).toEqual([
+    expect(toJS(city.properties!.get("name")!.meta.errors)).toEqual([
       "should NOT be longer than 7 characters"
     ]);
   });
