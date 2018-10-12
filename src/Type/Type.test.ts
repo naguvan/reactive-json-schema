@@ -126,8 +126,8 @@ test("test snapshot create", () => {
     minProperties: null,
     properties: {
       age: {
-        default: 0,
         meta: {
+          default: 0,
           disabled: false,
           errors: [],
           initial: 0,

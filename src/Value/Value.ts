@@ -9,7 +9,6 @@ import { IMeta, IMetaConfig } from "../Meta";
 export interface IValueAttrs<V> {
   readonly title?: string | null;
   readonly value: V | null;
-  readonly default?: V | null;
   readonly enum?: V[] | null;
   readonly const?: V | null;
   readonly options?: Array<{ label: string; value: V }> | null;
@@ -76,7 +75,6 @@ export function createValue<
       }),
       types.model("Value", {
         const: types.maybe(kind),
-        default: types.optional(kind, defaultv),
         enum: types.maybe(types.array(kind)),
         options: types.maybe(
           types.array(types.model({ label: types.string, value: kind }))

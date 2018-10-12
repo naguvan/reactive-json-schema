@@ -6,6 +6,7 @@ export interface IMetaAttrs<V, T> {
   readonly sequence?: number | null;
   readonly errors?: string[] | null;
   readonly initial?: V | null;
+  readonly default?: V | null;
 }
 
 export interface IMetaConfig<V, T> extends IMetaAttrs<V, T> {
@@ -47,6 +48,7 @@ export function createMeta<
         "component",
         components
       ) as ISimpleType<T>),
+      default: types.optional(kind, defaultv),
       disabled: types.optional(types.boolean, false),
       errors: types.optional(types.array(types.string), []),
       help: types.maybe(types.string),
