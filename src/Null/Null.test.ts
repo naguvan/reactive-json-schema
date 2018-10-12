@@ -37,6 +37,6 @@ describe("Null testing", () => {
   test("change null name type", () => {
     const type = Null.create(config);
     type.setName("skclusive");
-    expect(type.name).toBe("skclusive");
+    expect(type.meta.name).toBe("skclusive");
   });
 });

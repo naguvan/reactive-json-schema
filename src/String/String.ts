@@ -7,7 +7,7 @@ import { matchers } from "./matchers";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IStringComponent =
   | "text"
@@ -16,9 +16,17 @@ export type IStringComponent =
   | "date-time"
   | "textarea";
 
-export interface IStringMeta extends IMeta<IStringComponent> {
+export interface IStringMetaAttrs extends IMetaAttrs<IStringComponent> {
   readonly length: number;
 }
+
+export interface IStringMetaConfig
+  extends IMetaConfig<IStringComponent>,
+    IStringMetaAttrs {}
+
+export interface IStringMeta
+  extends IMeta<IStringComponent>,
+    IStringMetaAttrs {}
 
 export type IFormat =
   | "date"
@@ -62,19 +70,30 @@ export interface IStringAttrs extends IValueAttrs<string> {
 }
 
 export interface IStringConfig
-  extends IValueConfig<string, IStringType, IStringComponent, IStringMeta>,
+  extends IValueConfig<
+      string,
+      IStringType,
+      IStringComponent,
+      IStringMetaConfig
+    >,
     Partial<IStringAttrs> {}
 
 export interface IString
   extends IStringAttrs,
-    IValue<string, IStringType, IStringComponent, IStringMeta> {}
+    IValue<
+      string,
+      IStringType,
+      IStringComponent,
+      IStringMetaConfig,
+      IStringMeta
+    > {}
 
 export const StringMeta: IModelType<
-  Partial<IStringMeta>,
+  Partial<IStringMetaConfig>,
   IStringMeta
 > = types.compose(
   "StringMeta",
-  createMeta<IStringComponent>(
+  createMeta<IStringComponent, IStringMetaConfig, IStringMeta>(
     "text",
     "date",
     "password",
@@ -90,13 +109,16 @@ export const StringMeta: IModelType<
 export const String: IModelType<Partial<IStringConfig>, IString> = types
   .compose(
     "String",
-    createValue<string, IStringType, IStringComponent, IStringMeta>(
-      "string",
-      types.string,
-      "",
-      StringMeta,
-      { component: "text", length: -1 }
-    ),
+    createValue<
+      string,
+      IStringType,
+      IStringComponent,
+      IStringMetaConfig,
+      IStringMeta
+    >("string", types.string, "", StringMeta, {
+      component: "text",
+      length: -1
+    }),
     types.model({
       format: types.maybe(
         types.union(

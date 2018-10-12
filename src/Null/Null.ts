@@ -1,44 +1,50 @@
-import { IModelType, Snapshot, types } from "mobx-state-tree";
+import { IModelType, types } from "mobx-state-tree";
 
 import { mappings } from "../Common";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type INullComponent = "para";
 
-export interface INullMeta extends IMeta<INullComponent> {}
+export interface INullMetaAttrs extends IMetaAttrs<INullComponent> {}
+
+export interface INullMetaConfig
+  extends IMetaConfig<INullComponent>,
+    INullMetaAttrs {}
+
+export interface INullMeta extends IMeta<INullComponent>, INullMetaAttrs {}
 
 export type INullType = "null";
 
 export interface INullAttrs extends IValueAttrs<null> {}
 
 export interface INullConfig
-  extends IValueConfig<null, INullType, INullComponent, INullMeta>,
+  extends IValueConfig<null, INullType, INullComponent, INullMetaConfig>,
     Partial<INullAttrs> {}
 
 export interface INull
   extends INullAttrs,
-    IValue<null, INullType, INullComponent, INullMeta> {}
+    IValue<null, INullType, INullComponent, INullMetaConfig, INullMeta> {}
 
 export const NullMeta: IModelType<
-  Partial<INullMeta>,
+  Partial<INullMetaConfig>,
   INullMeta
 > = types.compose(
   "NullMeta",
-  createMeta<INullComponent>("para"),
+  createMeta<INullComponent, INullMetaConfig, INullMeta>("para"),
   types.model({})
 );
 
 export const Null: IModelType<Partial<INullConfig>, INull> = types.compose(
   "Null",
-  createValue<null, INullType, INullComponent, INullMeta>(
+  createValue<null, INullType, INullComponent, INullMetaConfig, INullMeta>(
     "null",
     types.null,
     null,
     NullMeta,
-    { component: "para" }
+    { component: "para", name: "" }
   ),
   types.model({})
 );

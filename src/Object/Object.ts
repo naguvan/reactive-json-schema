@@ -12,9 +12,13 @@ import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
 import { IType, ITypeConfig } from "../Type";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IObjectComponent = "grid" | "layout" | "list";
+
+export interface IObjectMetaAttrs extends IMetaAttrs<IObjectComponent> {}
+
+export interface IObjectMetaConfig extends IMetaConfig<IObjectComponent> {}
 
 export interface IObjectMeta extends IMeta<IObjectComponent> {}
 
@@ -31,7 +35,7 @@ export interface IObjectConfig
       object | null,
       IObjectType,
       IObjectComponent,
-      IObjectMeta
+      IObjectMetaConfig
     >,
     Partial<IObjectAttrs> {
   readonly properties?: { [key: string]: ITypeConfig };
@@ -40,7 +44,13 @@ export interface IObjectConfig
 
 export interface IObject
   extends IObjectAttrs,
-    IValue<object | null, IObjectType, IObjectComponent, IObjectMeta> {
+    IValue<
+      object | null,
+      IObjectType,
+      IObjectComponent,
+      IObjectMetaConfig,
+      IObjectMeta
+    > {
   readonly properties?: ReadonlyMap<string, IType> | null;
   readonly additionalProperties?: boolean | IType | null;
   readonly fields: IType[];
@@ -54,11 +64,15 @@ mappings.object = types.late("Object", createObject);
 let NObject: IModelType<Partial<IObjectConfig>, IObject>;
 
 export const ObjectMeta: IModelType<
-  Partial<IObjectMeta>,
+  Partial<IObjectMetaConfig>,
   IObjectMeta
 > = types.compose(
   "ObjectMeta",
-  createMeta<IObjectComponent>("grid", "layout", "list"),
+  createMeta<IObjectComponent, IObjectMetaConfig, IObjectMeta>(
+    "grid",
+    "layout",
+    "list"
+  ),
   types.model({})
 );
 
@@ -67,13 +81,15 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
     const XObject = types
       .compose(
         "Object",
-        createValue<object | null, IObjectType, IObjectComponent, IObjectMeta>(
-          "object",
-          types.map(types.frozen),
-          {},
-          ObjectMeta,
-          { component: "layout" }
-        ),
+        createValue<
+          object | null,
+          IObjectType,
+          IObjectComponent,
+          IObjectMetaConfig,
+          IObjectMeta
+        >("object", types.map(types.frozen), {}, ObjectMeta, {
+          component: "layout"
+        }),
         types.model({
           additionalProperties: types.maybe(
             types.union(types.boolean, types.late(createType))

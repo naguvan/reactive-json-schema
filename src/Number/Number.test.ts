@@ -40,7 +40,7 @@ describe("Number testing", () => {
   test("change number name type", () => {
     const type = Number.create(config);
     type.setName("senthilnathan");
-    expect(type.name).toBe("senthilnathan");
+    expect(type.meta.name).toBe("senthilnathan");
   });
 
   test("validate minimum valid", async () => {

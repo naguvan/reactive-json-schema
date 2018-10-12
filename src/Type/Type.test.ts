@@ -43,7 +43,7 @@ test("create boolean type ", () => {
   });
   expect(type.type).toBe("boolean");
   expect(type.title).toBe("naguvan");
-  expect(type.name).toBe(type.title);
+  expect(type.meta.name).toBe(type.title);
   expect(type.data).toBe(true);
 });
 
@@ -115,42 +115,49 @@ test("create array type", () => {
 test("test snapshot create", () => {
   const config: IObjectConfig = {
     additionalProperties: null,
-    disabled: false,
     errors: [],
-    mandatory: false,
     maxProperties: null,
+    meta: {
+      disabled: false,
+      mandatory: false,
+      name: "",
+      visible: true
+    },
     minProperties: null,
-    name: "",
     properties: {
       age: {
         default: 0,
-        disabled: false,
         errors: [],
         initial: 0,
-        mandatory: false,
+        meta: {
+          disabled: false,
+          mandatory: false,
+          name: "",
+          visible: true
+        },
         multipleOf: 2,
-        name: "",
         title: "age",
         type: "number",
-        value: 0,
-        visible: true
+        value: 0
       },
       name: {
-        disabled: false,
         errors: [],
-        mandatory: false,
+        meta: {
+          disabled: false,
+          length: 30,
+          mandatory: false,
+          name: "",
+          visible: true
+        },
         minLength: 3,
-        name: "",
         title: "name",
         type: "string",
-        value: "",
-        visible: true
+        value: ""
       }
     },
     required: null,
     title: "snapshot",
-    type: "object",
-    visible: true
+    type: "object"
   };
 
   const type = Type.create(config) as IObject;

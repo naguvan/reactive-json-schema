@@ -1,7 +1,7 @@
 import { types } from "mobx-state-tree";
 import { createValue, IValueConfig } from "./Value";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaConfig } from "../Meta";
 
 const config: IValueConfig<number, "number", "range", IMeta<"range">> = {
   title: "naguvan",
@@ -9,15 +9,17 @@ const config: IValueConfig<number, "number", "range", IMeta<"range">> = {
   value: 10
 };
 
-const ValueMeta = createMeta<"range">("range");
-
-const Value = createValue<number, "number", "range", IMeta<"range">>(
-  "number",
-  types.number,
-  0,
-  ValueMeta,
-  { component: "range" }
+const ValueMeta = createMeta<"range", IMetaConfig<"range">, IMeta<"range">>(
+  "range"
 );
+
+const Value = createValue<
+  number,
+  "number",
+  "range",
+  IMetaConfig<"range">,
+  IMeta<"range">
+>("number", types.number, 0, ValueMeta, { component: "range" });
 
 test("check type meta", () => {
   const type = Value.create(config);
@@ -31,14 +33,15 @@ test("createValue type type", () => {
   const type = Value.create(config);
   expect(type.type).toBe("number");
   expect(type.title).toBe("naguvan");
-  expect(type.name).toBe(type.title);
   expect(type.value).toBe(10);
   expect(type.initial).toBe(10);
   expect(type.modified).toBe(false);
 
-  expect(type.mandatory).toBe(false);
-  expect(type.disabled).toBe(false);
-  expect(type.visible).toBe(true);
+  expect(type.meta.name).toBe(type.title);
+  expect(type.meta.mandatory).toBe(false);
+  expect(type.meta.disabled).toBe(false);
+  expect(type.meta.visible).toBe(true);
+
   expect(type.validating).toBe(false);
   expect(type.errors!.length).toBe(0);
 });
@@ -64,37 +67,47 @@ test("change type name", () => {
   const type = Value.create(config);
 
   type.setName("skclusive");
-  expect(type.name).toBe("skclusive");
+  expect(type.meta.name).toBe("skclusive");
 });
 
 test("change mandatory property", () => {
   const type = Value.create(config);
 
-  expect(type.mandatory).toBe(false);
+  expect(type.meta.mandatory).toBe(false);
 
   type.setMandatory(true);
-  expect(type.mandatory).toBe(true);
+  expect(type.meta.mandatory).toBe(true);
 });
 
 test("change disabled property", () => {
-  const type = Value.create({ ...config, disabled: true });
+  const type = Value.create({
+    ...config,
+    meta: {
+      disabled: true
+    }
+  });
 
-  expect(type.disabled).toBe(true);
+  expect(type.meta.disabled).toBe(true);
 
   type.setDisabled(false);
-  expect(type.disabled).toBe(false);
+  expect(type.meta.disabled).toBe(false);
 });
 
 test("change visible property", () => {
-  const type = Value.create({ ...config, visible: false });
+  const type = Value.create({
+    ...config,
+    meta: {
+      visible: false
+    }
+  });
 
-  expect(type.visible).toBe(false);
+  expect(type.meta.visible).toBe(false);
 
   type.setDisabled(false);
-  expect(type.visible).toBe(false);
+  expect(type.meta.visible).toBe(false);
 
   type.setVisible(true);
-  expect(type.visible).toBe(true);
+  expect(type.meta.visible).toBe(true);
 });
 
 test("change error property", () => {

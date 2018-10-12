@@ -4,30 +4,51 @@ import { mappings } from "../Common";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IBooleanComponent = "radio" | "checkbox" | "switch";
 
-export interface IBooleanMeta extends IMeta<IBooleanComponent> {}
+export interface IBooleanMetaAttrs extends IMetaAttrs<IBooleanComponent> {}
+
+export interface IBooleanMetaConfig extends IMetaConfig<IBooleanComponent> {}
+
+export interface IBooleanMeta
+  extends IMeta<IBooleanComponent>,
+    IBooleanMetaAttrs {}
 
 export type IBooleanType = "boolean";
 
 export interface IBooleanAttrs extends IValueAttrs<boolean> {}
 
 export interface IBooleanConfig
-  extends IValueConfig<boolean, IBooleanType, IBooleanComponent, IBooleanMeta>,
+  extends IValueConfig<
+      boolean,
+      IBooleanType,
+      IBooleanComponent,
+      IBooleanMetaConfig
+    >,
     Partial<IBooleanAttrs> {}
 
 export interface IBoolean
   extends IBooleanAttrs,
-    IValue<boolean, IBooleanType, IBooleanComponent, IBooleanMeta> {}
+    IValue<
+      boolean,
+      IBooleanType,
+      IBooleanComponent,
+      IBooleanMetaConfig,
+      IBooleanMeta
+    > {}
 
 export const BooleanMeta: IModelType<
-  Partial<IBooleanMeta>,
+  Partial<IBooleanMetaConfig>,
   IBooleanMeta
 > = types.compose(
   "BooleanMeta",
-  createMeta<IBooleanComponent>("radio", "checkbox", "switch"),
+  createMeta<IBooleanComponent, IBooleanMetaConfig, IBooleanMeta>(
+    "radio",
+    "checkbox",
+    "switch"
+  ),
   types.model({})
 );
 
@@ -37,13 +58,13 @@ export const Boolean: IModelType<
   IBoolean
 > = types.compose(
   "Boolean",
-  createValue<boolean, IBooleanType, IBooleanComponent, IBooleanMeta>(
-    "boolean",
-    types.boolean,
-    false,
-    BooleanMeta,
-    { component: "switch" }
-  ),
+  createValue<
+    boolean,
+    IBooleanType,
+    IBooleanComponent,
+    IBooleanMetaConfig,
+    IBooleanMeta
+  >("boolean", types.boolean, false, BooleanMeta, { component: "switch" }),
   types.model({})
 );
 

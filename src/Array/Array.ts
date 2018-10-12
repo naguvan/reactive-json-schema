@@ -7,11 +7,17 @@ import { createType, IType, ITypeConfig } from "../Type";
 import { isArray, unique } from "../utils";
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IArrayComponent = "list" | "layout";
 
-export interface IArrayMeta extends IMeta<IArrayComponent> {}
+export interface IArrayMetaAttrs extends IMetaAttrs<IArrayComponent> {}
+
+export interface IArrayMetaConfig
+  extends IMetaConfig<IArrayComponent>,
+    IArrayMetaAttrs {}
+
+export interface IArrayMeta extends IMeta<IArrayComponent>, IArrayMetaAttrs {}
 
 export type IArrayType = "array";
 
@@ -28,13 +34,19 @@ export interface IArrayConfig
       Array<IAnything | null>,
       IArrayType,
       IArrayComponent,
-      IArrayMeta
+      IArrayMetaConfig
     >,
     Partial<IArrayAttrs> {}
 
 export interface IArray
   extends IArrayAttrs,
-    IValue<Array<IAnything | null>, IArrayType, IArrayComponent, IArrayMeta> {
+    IValue<
+      Array<IAnything | null>,
+      IArrayType,
+      IArrayComponent,
+      IArrayMetaConfig,
+      IArrayMeta
+    > {
   readonly elements: IType[];
   readonly dynamic: boolean;
   push(): Promise<void>;
@@ -46,11 +58,11 @@ mappings.array = types.late("Array", createArray);
 let NArray: IModelType<Partial<IArrayConfig>, IArray>;
 
 export const ArrayMeta: IModelType<
-  Partial<IArrayMeta>,
+  Partial<IArrayMetaConfig>,
   IArrayMeta
 > = types.compose(
   "ArrayMeta",
-  createMeta<IArrayComponent>("list", "layout"),
+  createMeta<IArrayComponent, IArrayMetaConfig, IArrayMeta>("list", "layout"),
   types.model({})
 );
 
@@ -63,6 +75,7 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           Array<IAnything | null>,
           IArrayType,
           IArrayComponent,
+          IArrayMetaConfig,
           IArrayMeta
         >("array", types.array(types.frozen), [], ArrayMeta, {
           component: "list"

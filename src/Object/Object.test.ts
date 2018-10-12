@@ -68,9 +68,6 @@ describe("Object testing", () => {
     expect(type.properties!.get("age")!.title).toBe("age");
     expect(type.properties!.get("age")!.data).toBe(1);
     expect(type.properties!.get("age")!.type).toBe("number");
-
-    // console.info(getSnapshot(type));
-    // console.info(getSnapshot(city));
   });
 
   test("nested object type", () => {

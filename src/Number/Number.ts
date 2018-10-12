@@ -5,11 +5,19 @@ import { decimals } from "../utils";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { createMeta, IMeta } from "../Meta";
+import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type INumberComponent = "text" | "range" | "slide";
 
-export interface INumberMeta extends IMeta<INumberComponent> {}
+export interface INumberMetaAttrs extends IMetaAttrs<INumberComponent> {}
+
+export interface INumberMetaConfig
+  extends IMetaConfig<INumberComponent>,
+    INumberMetaAttrs {}
+
+export interface INumberMeta
+  extends IMeta<INumberComponent>,
+    INumberMetaAttrs {}
 
 export type INumberType = "number";
 
@@ -20,19 +28,34 @@ export interface INumberAttrs extends IValueAttrs<number> {
 }
 
 export interface INumberConfig
-  extends IValueConfig<number, INumberType, INumberComponent, INumberMeta>,
+  extends IValueConfig<
+      number,
+      INumberType,
+      INumberComponent,
+      INumberMetaConfig
+    >,
     Partial<INumberAttrs> {}
 
 export interface INumber
   extends INumberAttrs,
-    IValue<number, INumberType, INumberComponent, INumberMeta> {}
+    IValue<
+      number,
+      INumberType,
+      INumberComponent,
+      INumberMetaConfig,
+      INumberMeta
+    > {}
 
 export const NumberMeta: IModelType<
-  Partial<INumberMeta>,
+  Partial<INumberMetaConfig>,
   INumberMeta
 > = types.compose(
   "NumberMeta",
-  createMeta<INumberComponent>("text", "range", "slide"),
+  createMeta<INumberComponent, INumberMetaConfig, INumberMeta>(
+    "text",
+    "range",
+    "slide"
+  ),
   types.model({})
 );
 
@@ -40,13 +63,13 @@ export const NumberMeta: IModelType<
 export const Number: IModelType<Partial<INumberConfig>, INumber> = types
   .compose(
     "Number",
-    createValue<number, INumberType, INumberComponent, INumberMeta>(
-      "number",
-      types.number,
-      0,
-      NumberMeta,
-      { component: "text" }
-    ),
+    createValue<
+      number,
+      INumberType,
+      INumberComponent,
+      INumberMetaConfig,
+      INumberMeta
+    >("number", types.number, 0, NumberMeta, { component: "text" }),
     types.model({
       maximum: types.maybe(types.number),
       minimum: types.maybe(types.number),
