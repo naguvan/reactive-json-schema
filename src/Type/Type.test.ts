@@ -127,10 +127,10 @@ test("test snapshot create", () => {
     properties: {
       age: {
         default: 0,
-        initial: 0,
         meta: {
           disabled: false,
           errors: [],
+          initial: 0,
           mandatory: false,
           name: "",
           visible: true

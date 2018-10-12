@@ -16,11 +16,13 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IObjectComponent = "grid" | "layout" | "list";
 
-export interface IObjectMetaAttrs extends IMetaAttrs<IObjectComponent> {}
+export interface IObjectMetaAttrs
+  extends IMetaAttrs<object | null, IObjectComponent> {}
 
-export interface IObjectMetaConfig extends IMetaConfig<IObjectComponent> {}
+export interface IObjectMetaConfig
+  extends IMetaConfig<object | null, IObjectComponent> {}
 
-export interface IObjectMeta extends IMeta<IObjectComponent> {}
+export interface IObjectMeta extends IMeta<object | null, IObjectComponent> {}
 
 export type IObjectType = "object";
 
@@ -68,7 +70,9 @@ export const ObjectMeta: IModelType<
   IObjectMeta
 > = types.compose(
   "ObjectMeta",
-  createMeta<IObjectComponent, IObjectMetaConfig, IObjectMeta>(
+  createMeta<object | null, IObjectComponent, IObjectMetaConfig, IObjectMeta>(
+    types.map(types.frozen),
+    {},
     "grid",
     "layout",
     "list"

@@ -9,14 +9,15 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type INumberComponent = "text" | "range" | "slide";
 
-export interface INumberMetaAttrs extends IMetaAttrs<INumberComponent> {}
+export interface INumberMetaAttrs
+  extends IMetaAttrs<number, INumberComponent> {}
 
 export interface INumberMetaConfig
-  extends IMetaConfig<INumberComponent>,
+  extends IMetaConfig<number, INumberComponent>,
     INumberMetaAttrs {}
 
 export interface INumberMeta
-  extends IMeta<INumberComponent>,
+  extends IMeta<number, INumberComponent>,
     INumberMetaAttrs {}
 
 export type INumberType = "number";
@@ -51,7 +52,9 @@ export const NumberMeta: IModelType<
   INumberMeta
 > = types.compose(
   "NumberMeta",
-  createMeta<INumberComponent, INumberMetaConfig, INumberMeta>(
+  createMeta<number, INumberComponent, INumberMetaConfig, INumberMeta>(
+    types.number,
+    0,
     "text",
     "range",
     "slide"

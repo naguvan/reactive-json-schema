@@ -1,20 +1,21 @@
 import { IModelType, ISimpleType, types } from "mobx-state-tree";
 
-export interface IMetaAttrs<T> {
+export interface IMetaAttrs<V, T> {
   readonly component?: T | null;
   readonly help?: string | null;
   readonly sequence?: number | null;
   readonly errors?: string[] | null;
+  readonly initial?: V | null;
 }
 
-export interface IMetaConfig<T> extends IMetaAttrs<T> {
+export interface IMetaConfig<V, T> extends IMetaAttrs<V, T> {
   readonly name?: string | null;
   readonly disabled?: boolean | null;
   readonly visible?: boolean | null;
   readonly mandatory?: boolean | null;
 }
 
-export interface IMeta<T> extends IMetaAttrs<T> {
+export interface IMeta<V, T> extends IMetaAttrs<V, T> {
   readonly name: string;
   readonly disabled: boolean;
   readonly visible: boolean;
@@ -27,13 +28,19 @@ export interface IMeta<T> extends IMetaAttrs<T> {
   addError(error: string): void;
   addErrors(errors: string[]): void;
   clearErrors(): void;
+  setInitial(initial: V): void;
 }
 
 export function createMeta<
+  V,
   T extends string,
-  C extends IMetaConfig<T>,
-  M extends IMeta<T> & C
->(...components: T[]): IModelType<Partial<C>, M> {
+  C extends IMetaConfig<V, T>,
+  M extends IMeta<V, T> & C
+>(
+  kind: ISimpleType<V>,
+  defaultv: V,
+  ...components: T[]
+): IModelType<Partial<C>, M> {
   const Meta: IModelType<Partial<C>, M> = types
     .model("Meta", {
       component: types.maybe(types.enumeration(
@@ -43,6 +50,7 @@ export function createMeta<
       disabled: types.optional(types.boolean, false),
       errors: types.optional(types.array(types.string), []),
       help: types.maybe(types.string),
+      initial: types.optional(kind, defaultv),
       mandatory: types.optional(types.boolean, false),
       name: types.optional(types.string, ""),
       sequence: types.maybe(types.number),
@@ -69,6 +77,9 @@ export function createMeta<
       },
       clearErrors(): void {
         it.errors.length = 0;
+      },
+      setInitial(initial: V): void {
+        it.initial = initial;
       }
     }))
     .views(it => ({

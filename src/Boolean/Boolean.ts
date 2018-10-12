@@ -8,12 +8,14 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IBooleanComponent = "radio" | "checkbox" | "switch";
 
-export interface IBooleanMetaAttrs extends IMetaAttrs<IBooleanComponent> {}
+export interface IBooleanMetaAttrs
+  extends IMetaAttrs<boolean, IBooleanComponent> {}
 
-export interface IBooleanMetaConfig extends IMetaConfig<IBooleanComponent> {}
+export interface IBooleanMetaConfig
+  extends IMetaConfig<boolean, IBooleanComponent> {}
 
 export interface IBooleanMeta
-  extends IMeta<IBooleanComponent>,
+  extends IMeta<boolean, IBooleanComponent>,
     IBooleanMetaAttrs {}
 
 export type IBooleanType = "boolean";
@@ -44,7 +46,9 @@ export const BooleanMeta: IModelType<
   IBooleanMeta
 > = types.compose(
   "BooleanMeta",
-  createMeta<IBooleanComponent, IBooleanMetaConfig, IBooleanMeta>(
+  createMeta<boolean, IBooleanComponent, IBooleanMetaConfig, IBooleanMeta>(
+    types.boolean,
+    false,
     "radio",
     "checkbox",
     "switch"

@@ -3,22 +3,30 @@ import { createValue, IValueConfig } from "./Value";
 
 import { createMeta, IMeta, IMetaConfig } from "../Meta";
 
-const config: IValueConfig<number, "number", "range", IMeta<"range">> = {
+const config: IValueConfig<
+  number,
+  "number",
+  "range",
+  IMeta<number, "range">
+> = {
   title: "naguvan",
   type: "number",
   value: 10
 };
 
-const ValueMeta = createMeta<"range", IMetaConfig<"range">, IMeta<"range">>(
-  "range"
-);
+const ValueMeta = createMeta<
+  number,
+  "range",
+  IMetaConfig<number, "range">,
+  IMeta<number, "range">
+>(types.number, 0, "range");
 
 const Value = createValue<
   number,
   "number",
   "range",
-  IMetaConfig<"range">,
-  IMeta<"range">
+  IMetaConfig<number, "range">,
+  IMeta<number, "range">
 >("number", types.number, 0, ValueMeta, { component: "range" });
 
 test("check type meta", () => {
@@ -34,7 +42,7 @@ test("createValue type type", () => {
   expect(type.type).toBe("number");
   expect(type.title).toBe("naguvan");
   expect(type.value).toBe(10);
-  expect(type.initial).toBe(10);
+  expect(type.meta.initial).toBe(10);
   expect(type.modified).toBe(false);
 
   expect(type.meta.name).toBe(type.title);
@@ -50,12 +58,12 @@ test("change type value", () => {
   const type = Value.create({ ...config, value: 20 });
 
   expect(type.value).toBe(20);
-  expect(type.initial).toBe(20);
+  expect(type.meta.initial).toBe(20);
   expect(type.modified).toBe(false);
 
   type.setValue(30);
   expect(type.value).toBe(30);
-  expect(type.initial).toBe(20);
+  expect(type.meta.initial).toBe(20);
   expect(type.modified).toBe(true);
 
   type.reset();

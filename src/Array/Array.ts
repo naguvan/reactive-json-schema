@@ -11,13 +11,16 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IArrayComponent = "list" | "layout";
 
-export interface IArrayMetaAttrs extends IMetaAttrs<IArrayComponent> {}
+export interface IArrayMetaAttrs
+  extends IMetaAttrs<Array<IAnything | null>, IArrayComponent> {}
 
 export interface IArrayMetaConfig
-  extends IMetaConfig<IArrayComponent>,
+  extends IMetaConfig<Array<IAnything | null>, IArrayComponent>,
     IArrayMetaAttrs {}
 
-export interface IArrayMeta extends IMeta<IArrayComponent>, IArrayMetaAttrs {}
+export interface IArrayMeta
+  extends IMeta<Array<IAnything | null>, IArrayComponent>,
+    IArrayMetaAttrs {}
 
 export type IArrayType = "array";
 
@@ -62,7 +65,12 @@ export const ArrayMeta: IModelType<
   IArrayMeta
 > = types.compose(
   "ArrayMeta",
-  createMeta<IArrayComponent, IArrayMetaConfig, IArrayMeta>("list", "layout"),
+  createMeta<
+    Array<IAnything | null>,
+    IArrayComponent,
+    IArrayMetaConfig,
+    IArrayMeta
+  >(types.array(types.frozen), [], "list", "layout"),
   types.model({})
 );
 

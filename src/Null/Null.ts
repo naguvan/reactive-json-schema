@@ -8,13 +8,15 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type INullComponent = "para";
 
-export interface INullMetaAttrs extends IMetaAttrs<INullComponent> {}
+export interface INullMetaAttrs extends IMetaAttrs<null, INullComponent> {}
 
 export interface INullMetaConfig
-  extends IMetaConfig<INullComponent>,
+  extends IMetaConfig<null, INullComponent>,
     INullMetaAttrs {}
 
-export interface INullMeta extends IMeta<INullComponent>, INullMetaAttrs {}
+export interface INullMeta
+  extends IMeta<null, INullComponent>,
+    INullMetaAttrs {}
 
 export type INullType = "null";
 
@@ -33,7 +35,11 @@ export const NullMeta: IModelType<
   INullMeta
 > = types.compose(
   "NullMeta",
-  createMeta<INullComponent, INullMetaConfig, INullMeta>("para"),
+  createMeta<null, INullComponent, INullMetaConfig, INullMeta>(
+    types.null,
+    null,
+    "para"
+  ),
   types.model({})
 );
 

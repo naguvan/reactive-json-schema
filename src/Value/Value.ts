@@ -10,13 +10,12 @@ export interface IValueAttrs<V> {
   readonly title?: string | null;
   readonly value: V | null;
   readonly default?: V | null;
-  readonly initial?: V | null;
   readonly enum?: V[] | null;
   readonly const?: V | null;
   readonly options?: Array<{ label: string; value: V }> | null;
 }
 
-export interface IValueConfig<V, T, C, M extends IMetaConfig<C>>
+export interface IValueConfig<V, T, C, M extends IMetaConfig<V, C>>
   extends Partial<IValueAttrs<V>> {
   readonly type: T;
   readonly meta?: M | null;
@@ -26,8 +25,8 @@ export interface IValue<
   V,
   T,
   C,
-  M extends IMetaConfig<C>,
-  F extends M & IMeta<C>
+  M extends IMetaConfig<V, C>,
+  F extends M & IMeta<V, C>
 > extends IValueAttrs<V> {
   readonly type: T;
   readonly meta: F;
@@ -58,8 +57,8 @@ export function createValue<
   V,
   T,
   C,
-  M extends IMetaConfig<C>,
-  F extends M & IMeta<C>
+  M extends IMetaConfig<V, C>,
+  F extends M & IMeta<V, C>
 >(
   type: T,
   kind: ISimpleType<V>,
@@ -79,7 +78,6 @@ export function createValue<
         const: types.maybe(kind),
         default: types.optional(kind, defaultv),
         enum: types.maybe(types.array(kind)),
-        initial: types.optional(kind, defaultv),
         options: types.maybe(
           types.array(types.model({ label: types.string, value: kind }))
         ),
@@ -95,7 +93,7 @@ export function createValue<
           const { title } = it;
           it.meta.setName(title.toLowerCase().replace(" ", "-"));
         }
-        it.initial = it.value;
+        it.meta.setInitial(it.value);
         if (
           it.enum != null &&
           it.enum.length > 0 &&
@@ -172,7 +170,7 @@ export function createValue<
     }))
     .views(it => ({
       get modified(): boolean {
-        return it.value !== it.initial;
+        return it.value !== it.meta.initial;
       },
       get valid(): boolean {
         return it.meta.valid;
@@ -186,7 +184,7 @@ export function createValue<
     }))
     .actions(it => ({
       reset(): void {
-        it.value = it.initial;
+        it.value = it.meta.initial as V;
         it.meta.clearErrors();
       },
       validate: flow<void>(function*() {

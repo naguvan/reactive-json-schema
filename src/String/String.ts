@@ -16,16 +16,16 @@ export type IStringComponent =
   | "date-time"
   | "textarea";
 
-export interface IStringMetaAttrs extends IMetaAttrs<IStringComponent> {
+export interface IStringMetaAttrs extends IMetaAttrs<string, IStringComponent> {
   readonly length: number;
 }
 
 export interface IStringMetaConfig
-  extends IMetaConfig<IStringComponent>,
+  extends IMetaConfig<string, IStringComponent>,
     IStringMetaAttrs {}
 
 export interface IStringMeta
-  extends IMeta<IStringComponent>,
+  extends IMeta<string, IStringComponent>,
     IStringMetaAttrs {}
 
 export type IFormat =
@@ -93,7 +93,9 @@ export const StringMeta: IModelType<
   IStringMeta
 > = types.compose(
   "StringMeta",
-  createMeta<IStringComponent, IStringMetaConfig, IStringMeta>(
+  createMeta<string, IStringComponent, IStringMetaConfig, IStringMeta>(
+    types.string,
+    "",
     "text",
     "date",
     "password",
