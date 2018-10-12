@@ -94,7 +94,8 @@ export const String: IModelType<Partial<IStringConfig>, IString> = types
       "string",
       types.string,
       "",
-      StringMeta
+      StringMeta,
+      { component: "text", length: -1 }
     ),
     types.model({
       format: types.maybe(

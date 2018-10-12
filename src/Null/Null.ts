@@ -31,13 +31,14 @@ export const NullMeta: IModelType<
   types.model({})
 );
 
-export const Null: IModelType<Snapshot<INullConfig>, INull> = types.compose(
+export const Null: IModelType<Partial<INullConfig>, INull> = types.compose(
   "Null",
   createValue<null, INullType, INullComponent, INullMeta>(
     "null",
     types.null,
     null,
-    NullMeta
+    NullMeta,
+    { component: "para" }
   ),
   types.model({})
 );

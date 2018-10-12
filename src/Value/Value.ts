@@ -18,8 +18,6 @@ export interface IValueAttrs<V> {
   readonly enum?: V[] | null;
   readonly const?: V | null;
   readonly options?: Array<{ label: string; value: V }> | null;
-  readonly component?: string | null;
-  readonly sequence?: number | null;
   readonly errors?: string[] | null;
 }
 
@@ -31,7 +29,7 @@ export interface IValueConfig<V, T, C, M extends IMeta<C>>
 
 export interface IValue<V, T, C, M extends IMeta<C>> extends IValueAttrs<V> {
   readonly type: T;
-  readonly meta?: M | null;
+  readonly meta: M;
   readonly modified: boolean;
   readonly validating: boolean;
   readonly syncing: boolean;
@@ -66,18 +64,18 @@ export function createValue<V, T, C, M extends IMeta<C>>(
   type: T,
   kind: ISimpleType<V>,
   defaultv: V,
-  meta: IModelType<Partial<M>, M>
+  meta: IModelType<Partial<M>, M>,
+  defaultMeta: M
 ): IModelType<Snapshot<IValueConfig<V, T, C, M>>, IValue<V, T, C, M>> {
   const Value: IModelType<
     Snapshot<IValueConfig<V, T, C, M>>,
     IValue<V, T, C, M>
   > = types.compose(
     types.model("Meta", {
-      meta: types.maybe(meta)
+      meta: types.optional(meta, defaultMeta)
     }),
     types
       .model("Value", {
-        component: types.maybe(types.string),
         const: types.maybe(kind),
         default: types.optional(kind, defaultv),
         disabled: types.optional(types.boolean, false),
@@ -89,7 +87,6 @@ export function createValue<V, T, C, M extends IMeta<C>>(
         options: types.maybe(
           types.array(types.model({ label: types.string, value: kind }))
         ),
-        sequence: types.maybe(types.number),
         title: types.maybe(types.string),
         type: types.literal(type),
         value: types.optional(kind, defaultv),

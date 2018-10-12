@@ -44,7 +44,8 @@ export const Number: IModelType<Partial<INumberConfig>, INumber> = types
       "number",
       types.number,
       0,
-      NumberMeta
+      NumberMeta,
+      { component: "text" }
     ),
     types.model({
       maximum: types.maybe(types.number),

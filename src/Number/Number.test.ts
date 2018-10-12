@@ -1,160 +1,183 @@
 import { INumberConfig, Number } from "./Number";
 
-const config: INumberConfig = {
-  title: "naguvan",
-  type: "number",
-  value: 50
-};
+describe("Number testing", () => {
+  const config: INumberConfig = {
+    meta: {
+      component: "range",
+      help: "age selector",
+      sequence: 10
+    },
+    title: "naguvan",
+    type: "number",
+    value: 50
+  };
 
-test("create number type", () => {
-  const type = Number.create(config);
-  expect(type.type).toBe("number");
-  expect(type.title).toBe("naguvan");
-  expect(type.data).toBe(50);
-  expect(type.minimum).toBe(null);
-  expect(type.maximum).toBe(null);
-});
+  test("check number default meta", () => {
+    const type = Number.create();
+    expect(type.meta).not.toBeNull();
+    expect(type.meta.component).toBe("text");
+    expect(type.meta.sequence).toBeNull();
+    expect(type.meta.help).toBeNull();
+  });
 
-test("change number name type", () => {
-  const type = Number.create(config);
-  type.setName("senthilnathan");
-  expect(type.name).toBe("senthilnathan");
-});
+  test("test number meta", () => {
+    const type = Number.create(config);
+    expect(type.meta).not.toBeNull();
+    expect(type.meta.component).toBe("range");
+    expect(type.meta.help).toBe("age selector");
+    expect(type.meta.sequence).toBe(10);
+  });
 
-test("validate minimum valid", async () => {
-  const type = Number.create({ ...config, minimum: 10 });
+  test("create number type", () => {
+    const type = Number.create(config);
+    expect(type.type).toBe("number");
+    expect(type.title).toBe("naguvan");
+    expect(type.data).toBe(50);
+    expect(type.minimum).toBe(null);
+    expect(type.maximum).toBe(null);
+  });
 
-  type.setValue(12);
-  expect(type.data).toBe(12);
+  test("change number name type", () => {
+    const type = Number.create(config);
+    type.setName("senthilnathan");
+    expect(type.name).toBe("senthilnathan");
+  });
 
-  await type.validate();
+  test("validate minimum valid", async () => {
+    const type = Number.create({ ...config, minimum: 10 });
 
-  // expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    type.setValue(12);
+    expect(type.data).toBe(12);
 
-test("validate minimum invalid", async () => {
-  const type = Number.create({ ...config, minimum: 10 });
+    await type.validate();
 
-  type.setValue(5);
-  expect(type.data).toBe(5);
+    // expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
 
-  await type.validate();
+  test("validate minimum invalid", async () => {
+    const type = Number.create({ ...config, minimum: 10 });
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual(["should NOT be lesser than 10"]);
-});
+    type.setValue(5);
+    expect(type.data).toBe(5);
 
-test("validate maximum valid", async () => {
-  const type = Number.create({ ...config, maximum: 10 });
+    await type.validate();
 
-  type.setValue(5);
-  expect(type.data).toBe(5);
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual(["should NOT be lesser than 10"]);
+  });
 
-  await type.validate();
+  test("validate maximum valid", async () => {
+    const type = Number.create({ ...config, maximum: 10 });
 
-  expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    type.setValue(5);
+    expect(type.data).toBe(5);
 
-test("validate maximum invalid", async () => {
-  const type = Number.create({ ...config, maximum: 10 });
+    await type.validate();
 
-  type.setValue(15);
-  expect(type.data).toBe(15);
+    expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
 
-  await type.validate();
+  test("validate maximum invalid", async () => {
+    const type = Number.create({ ...config, maximum: 10 });
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual(["should NOT be greater than 10"]);
-});
+    type.setValue(15);
+    expect(type.data).toBe(15);
 
-test("test invalid multipleOf configuration", () => {
-  expect(() =>
-    Number.create({
-      ...config,
-      multipleOf: 0
-    })
-  ).toThrowError(`multipleOf can not be zero`);
+    await type.validate();
 
-  expect(() =>
-    Number.create({
-      ...config,
-      multipleOf: -10
-    })
-  ).toThrowError(`multipleOf can not be negative`);
-});
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual(["should NOT be greater than 10"]);
+  });
 
-test("validate multipleOf valid", async () => {
-  const type = Number.create({ ...config, multipleOf: 3 });
+  test("test invalid multipleOf configuration", () => {
+    expect(() =>
+      Number.create({
+        ...config,
+        multipleOf: 0
+      })
+    ).toThrowError(`multipleOf can not be zero`);
 
-  type.setValue(27);
-  expect(type.data).toBe(27);
+    expect(() =>
+      Number.create({
+        ...config,
+        multipleOf: -10
+      })
+    ).toThrowError(`multipleOf can not be negative`);
+  });
 
-  await type.validate();
+  test("validate multipleOf valid", async () => {
+    const type = Number.create({ ...config, multipleOf: 3 });
 
-  expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    type.setValue(27);
+    expect(type.data).toBe(27);
 
-test("validate multipleOf invalid", async () => {
-  const type = Number.create({ ...config, multipleOf: 3 });
+    await type.validate();
 
-  type.setValue(29);
-  expect(type.data).toBe(29);
+    expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
 
-  await type.validate();
+  test("validate multipleOf invalid", async () => {
+    const type = Number.create({ ...config, multipleOf: 3 });
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual(["should be multiple of 3"]);
-});
+    type.setValue(29);
+    expect(type.data).toBe(29);
 
-test("validate const valid", async () => {
-  const type = Number.create({ ...config, const: 5 });
+    await type.validate();
 
-  type.setValue(5);
-  expect(type.data).toBe(5);
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual(["should be multiple of 3"]);
+  });
 
-  await type.validate();
+  test("validate const valid", async () => {
+    const type = Number.create({ ...config, const: 5 });
 
-  expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    type.setValue(5);
+    expect(type.data).toBe(5);
 
-test("validate const invalid", async () => {
-  const type = Number.create({ ...config, const: 5 });
+    await type.validate();
 
-  type.setValue(10);
-  expect(type.data).toBe(10);
+    expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
 
-  await type.validate();
+  test("validate const invalid", async () => {
+    const type = Number.create({ ...config, const: 5 });
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
-});
+    type.setValue(10);
+    expect(type.data).toBe(10);
 
-test("validate enum valid", async () => {
-  const type = Number.create({ ...config, enum: [5, 10] });
+    await type.validate();
 
-  type.setValue(5);
-  expect(type.data).toBe(5);
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
+  });
 
-  await type.validate();
+  test("validate enum valid", async () => {
+    const type = Number.create({ ...config, enum: [5, 10] });
 
-  expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    type.setValue(5);
+    expect(type.data).toBe(5);
 
-test("validate enum invalid", async () => {
-  const type = Number.create({ ...config, enum: [5, 20] });
+    await type.validate();
 
-  type.setValue(10);
-  expect(type.data).toBe(10);
+    expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
 
-  await type.validate();
+  test("validate enum invalid", async () => {
+    const type = Number.create({ ...config, enum: [5, 20] });
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual([
-    "should be equal to one of the allowed values [5, 20]"
-  ]);
+    type.setValue(10);
+    expect(type.data).toBe(10);
+
+    await type.validate();
+
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual([
+      "should be equal to one of the allowed values [5, 20]"
+    ]);
+  });
 });

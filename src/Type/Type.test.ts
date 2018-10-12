@@ -136,13 +136,11 @@ test("test snapshot create", () => {
         visible: true
       },
       name: {
-        component: null,
         disabled: false,
         errors: [],
         mandatory: false,
         minLength: 3,
         name: "",
-        sequence: null,
         title: "name",
         type: "string",
         value: "",

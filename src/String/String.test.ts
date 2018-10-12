@@ -26,10 +26,18 @@ test("test string meta", () => {
   const type = String.create(config);
 
   expect(type.meta).not.toBeNull();
-  expect(type.meta!.component).toBe("password");
-  expect(type.meta!.help).toBe("testing");
-  expect(type.meta!.length).toBe(50);
+  expect(type.meta.component).toBe("password");
+  expect(type.meta.help).toBe("testing");
+  expect(type.meta.length).toBe(50);
   expect(type.minLength).toBe(4);
+});
+
+test("check string default meta", () => {
+  const type = String.create();
+  expect(type.meta).not.toBeNull();
+  expect(type.meta.component).toBe("text");
+  expect(type.meta.sequence).toBeNull();
+  expect(type.meta.help).toBeNull();
 });
 
 test("change string value", () => {

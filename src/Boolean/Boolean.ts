@@ -41,7 +41,8 @@ export const Boolean: IModelType<
     "boolean",
     types.boolean,
     false,
-    BooleanMeta
+    BooleanMeta,
+    { component: "switch" }
   ),
   types.model({})
 );

@@ -15,8 +15,17 @@ const Value = createValue<number, "number", "range", IMeta<"range">>(
   "number",
   types.number,
   0,
-  ValueMeta
+  ValueMeta,
+  { component: "range" }
 );
+
+test("check type meta", () => {
+  const type = Value.create(config);
+  expect(type.meta).not.toBeNull();
+  expect(type.meta.component).toBe("range");
+  expect(type.meta.sequence).toBeNull();
+  expect(type.meta.help).toBeNull();
+});
 
 test("createValue type type", () => {
   const type = Value.create(config);

@@ -64,7 +64,9 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           IArrayType,
           IArrayComponent,
           IArrayMeta
-        >("array", types.array(types.frozen), [], ArrayMeta),
+        >("array", types.array(types.frozen), [], ArrayMeta, {
+          component: "list"
+        }),
         types.model({
           additionalItems: types.maybe(types.boolean),
           elements: types.optional(types.array(types.late(createType)), []),

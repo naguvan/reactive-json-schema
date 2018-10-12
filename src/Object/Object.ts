@@ -71,7 +71,8 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
           "object",
           types.map(types.frozen),
           {},
-          ObjectMeta
+          ObjectMeta,
+          { component: "layout" }
         ),
         types.model({
           additionalProperties: types.maybe(
@@ -85,18 +86,6 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
           required: types.maybe(types.array(types.string))
         })
       )
-      .actions(it => ({
-        updateProps(value: object | null) {
-          if (value) {
-            keys(value).forEach(key => {
-              const type = it.properties!.get(key);
-              if (type) {
-                return (type as any).setValue((value as any)[key]);
-              }
-            });
-          }
-        }
-      }))
       .volatile(it => ({
         getActuals(value: Map<string, object> | null): string[] {
           if (value === null) {
@@ -109,7 +98,9 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
       }))
       .volatile(it => ({
         getAdditionals(value: Map<string, object> | null): string[] {
-          return it.getActuals(value).filter(prop => !it.properties!.has(prop));
+          return it
+            .getActuals(value)
+            .filter(prop => !it.properties || !it.properties.has(prop));
         },
 
         getProperties(): string[] {
@@ -120,14 +111,26 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
         },
 
         getProperty(property: string): IType | undefined {
-          return it.properties !== null
-            ? (it.properties!.get(property) as IType)
+          return it.properties
+            ? (it.properties.get(property) as IType)
             : undefined;
+        }
+      }))
+      .actions(it => ({
+        updateProps(value: object | null) {
+          if (value) {
+            keys(value).forEach(key => {
+              const type = it.getProperty(key);
+              if (type) {
+                return (type as any).setValue((value as any)[key]);
+              }
+            });
+          }
         }
       }))
       .views(it => ({
         get count() {
-          return it.properties != null ? it.properties.size : 0;
+          return it.properties ? it.properties.size : 0;
         },
         get valid(): boolean {
           return (
@@ -138,7 +141,9 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
           );
         },
         get fields(): IType[] {
-          return Array.from(it.properties!.values()) as IType[];
+          return it.properties
+            ? (Array.from(it.properties.values()) as IType[])
+            : [];
         }
       }))
       .actions(it => ({
@@ -158,10 +163,12 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
             );
           }
 
-          for (const [key, field] of it.properties!.entries()) {
-            field.setName(key);
-            if (!field.title) {
-              field.setTitle(key);
+          if (it.properties) {
+            for (const [key, field] of it.properties.entries()) {
+              field.setName(key);
+              if (!field.title) {
+                field.setTitle(key);
+              }
             }
           }
 
@@ -270,7 +277,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
           const properties = it.getProperties();
           return properties.reduce(
             (data: any, key: string) => {
-              const type = it.properties!.get(key);
+              const type = it.getProperty(key);
               data[key] = type!.data;
               return data;
             },
