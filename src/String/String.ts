@@ -11,6 +11,7 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 export type IStringComponent =
   | "text"
+  | "select"
   | "date"
   | "color"
   | "password"
@@ -18,9 +19,8 @@ export type IStringComponent =
   | "time"
   | "textarea";
 
-export interface IStringMetaAttrs extends IMetaAttrs<string, IStringComponent> {
-  readonly length?: number;
-}
+export interface IStringMetaAttrs
+  extends IMetaAttrs<string, IStringComponent> {}
 
 export interface IStringMetaConfig
   extends IMetaConfig<string, IStringComponent>,
@@ -99,6 +99,7 @@ export const StringMeta: IModelType<
     types.string,
     "",
     "text",
+    "select",
     "color",
     "date",
     "password",
@@ -106,9 +107,7 @@ export const StringMeta: IModelType<
     "textarea",
     "time"
   ),
-  types.model({
-    length: types.optional(types.number, -1)
-  })
+  types.model({})
 );
 
 // tslint:disable-next-line:variable-name
@@ -122,8 +121,7 @@ export const String: IModelType<Partial<IStringConfig>, IString> = types
       IStringMetaConfig,
       IStringMeta
     >("string", types.string, "", StringMeta, {
-      component: "text",
-      length: -1
+      component: "text"
     }),
     types.model({
       format: types.maybe(

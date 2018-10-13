@@ -10,7 +10,6 @@ export interface IValueAttrs<V> {
   readonly title?: string | null;
   readonly enum?: V[] | null;
   readonly const?: V | null;
-  readonly options?: Array<{ label: string; value: V }> | null;
 }
 
 export interface IValueConfig<V, T, C, M extends IMetaConfig<V, C>>
@@ -33,12 +32,17 @@ export interface IValue<
   readonly syncing: boolean;
   readonly data: V;
   readonly valid: boolean;
+  readonly errors: string[];
 
   setValue(value: V): void;
   setTitle(title: string): void;
 
   reset(): void;
   validate(): Promise<void>;
+
+  addError(error: string): void;
+  addErrors(errors: string[]): void;
+  clearErrors(): void;
 
   sync(value: V): Promise<void>;
 
@@ -75,9 +79,7 @@ export function createValue<
       types.model("Value", {
         const: types.maybe(kind),
         enum: types.maybe(types.array(kind)),
-        options: types.maybe(
-          types.array(types.model({ label: types.string, value: kind }))
-        ),
+        errors: types.optional(types.array(types.string), []),
         title: types.maybe(types.string),
         type: types.literal(type)
       })
@@ -85,6 +87,12 @@ export function createValue<
     .volatile(it => ({ _validating: false, syncing: false }))
     .actions(it => ({
       afterCreate() {
+        if (it.errors.length > 0) {
+          throw new Error(
+            `errors property can not be configured for field ${it.title}`
+          );
+        }
+
         if (it.meta.name === "" && it.title) {
           const { title } = it;
           it.meta.setName(title.toLowerCase().replace(" ", "-"));
@@ -92,13 +100,13 @@ export function createValue<
         if (
           it.enum != null &&
           it.enum.length > 0 &&
-          (it.options == null || it.options.length === 0)
+          (!it.meta.options || it.meta.options.length === 0)
         ) {
           const options = it.enum.map(option => ({
             label: String(option),
             value: option
           }));
-          (it.options as any) = options;
+          it.meta.setOptions(options);
         }
       },
       setTitle(title: string): void {
@@ -166,7 +174,7 @@ export function createValue<
         return it.meta.value !== it.meta.initial;
       },
       get valid(): boolean {
-        return it.meta.valid;
+        return it.errors!.length === 0;
       },
       get data(): V {
         return toJS(it.meta.value) as V;
@@ -176,17 +184,28 @@ export function createValue<
       }
     }))
     .actions(it => ({
+      addError(error: string): void {
+        it.errors.push(error);
+      },
+      addErrors(errors: string[]): void {
+        it.errors.push(...errors);
+      },
+      clearErrors(): void {
+        it.errors.length = 0;
+      }
+    }))
+    .actions(it => ({
       reset(): void {
         it.meta.setValue(it.meta.initial as V);
-        it.meta.clearErrors();
+        it.clearErrors();
       },
       validate: flow<void>(function*() {
         if (it.syncing /*|| it.validating*/) {
           return [];
         }
-        it.meta.clearErrors();
+        it.clearErrors();
         it._validating = true;
-        it.meta.addErrors(yield it.tryValidate(it.meta.value));
+        it.addErrors(yield it.tryValidate(it.meta.value));
         it._validating = false;
       })
     }))

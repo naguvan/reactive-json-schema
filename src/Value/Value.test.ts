@@ -57,7 +57,7 @@ test("createValue type type", () => {
   expect(type.meta.visible).toBe(true);
 
   expect(type.validating).toBe(false);
-  expect(type.meta.errors!.length).toBe(0);
+  expect(type.errors!.length).toBe(0);
 });
 
 test("change type value", () => {
@@ -132,15 +132,15 @@ test("change visible property", () => {
 test("change error property", () => {
   const type = Value.create(config);
 
-  expect(type.meta.errors!.length).toBe(0);
+  expect(type.errors!.length).toBe(0);
   expect(type.valid).toBe(true);
 
-  type.meta.addError("this type has some error");
-  expect(type.meta.errors!.slice(0)).toEqual(["this type has some error"]);
+  type.addError("this type has some error");
+  expect(type.errors!.slice(0)).toEqual(["this type has some error"]);
   expect(type.valid).toBe(false);
 
   type.reset();
-  expect(type.meta.errors!.length).toBe(0);
+  expect(type.errors!.length).toBe(0);
   expect(type.valid).toBe(true);
 });
 
@@ -165,7 +165,7 @@ test("validate const valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.meta.errors!.slice(0)).toEqual([]);
+  expect(type.errors!.slice(0)).toEqual([]);
 });
 
 test("validate const invalid", async () => {
@@ -177,7 +177,7 @@ test("validate const invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.meta.errors!.slice(0)).toEqual(["should be equal to 5"]);
+  expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
 });
 
 test("validate enum valid", async () => {
@@ -189,7 +189,7 @@ test("validate enum valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.meta.errors!.slice(0)).toEqual([]);
+  expect(type.errors!.slice(0)).toEqual([]);
 });
 
 test("validate enum invalid", async () => {
@@ -201,7 +201,7 @@ test("validate enum invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.meta.errors!.slice(0)).toEqual([
+  expect(type.errors!.slice(0)).toEqual([
     "should be equal to one of the allowed values [5, 20]"
   ]);
 });

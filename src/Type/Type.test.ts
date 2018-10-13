@@ -16,7 +16,6 @@ const Type = createType();
 test("create string type ", () => {
   const type = Type.create({
     meta: {
-      length: 100,
       value: "sk"
     },
     minLength: 4,
@@ -134,7 +133,6 @@ test("test snapshot create", () => {
     maxProperties: null,
     meta: {
       disabled: false,
-      errors: [],
       mandatory: false,
       name: "",
       visible: true
@@ -145,7 +143,6 @@ test("test snapshot create", () => {
         meta: {
           default: 0,
           disabled: false,
-          errors: [],
           initial: 0,
           mandatory: false,
           name: "",
@@ -159,8 +156,6 @@ test("test snapshot create", () => {
       name: {
         meta: {
           disabled: false,
-          errors: [],
-          length: 30,
           mandatory: false,
           name: "",
           value: "",
@@ -205,9 +200,6 @@ test("form sample schema", async () => {
               type: "number"
             },
             name: {
-              meta: {
-                length: 100
-              },
               minLength: 3,
               title: "name",
               type: "string"
@@ -223,8 +215,7 @@ test("form sample schema", async () => {
       color: {
         format: "color",
         meta: {
-          component: "color",
-          length: 100
+          component: "color"
         },
         title: "In which color",
         type: "string"
@@ -268,7 +259,6 @@ test("form sample schema", async () => {
           },
           middle: {
             meta: {
-              length: 100,
               sequence: 1,
               value: "sk"
             },
@@ -292,7 +282,6 @@ test("form sample schema", async () => {
       },
       title: {
         meta: {
-          length: 100,
           value: "sk"
         },
         minLength: 5,
@@ -302,9 +291,8 @@ test("form sample schema", async () => {
       type: {
         enum: [1, 2],
         meta: {
-          value: 5
+          options: [{ label: "One", value: 1 }, { label: "Two", value: 2 }]
         },
-        options: [{ label: "One", value: 1 }, { label: "Two", value: 2 }],
         title: "Select a type",
         type: "number"
       }
@@ -330,7 +318,7 @@ test("form sample schema", async () => {
     },
     size: 5,
     title: "sk",
-    type: 5
+    type: 0
   });
 
   const color = type.getProperty("color") as IString;
@@ -349,7 +337,7 @@ test("form sample schema", async () => {
     },
     size: 5,
     title: "sk",
-    type: 5
+    type: 0
   });
 
   await type.validate();
@@ -402,6 +390,10 @@ test("form sample schema", async () => {
   });
 
   await type.sync({ title: "senthilnathan", type: 2 });
+
+  const options = type.getProperty("type")!.meta.options;
+  expect(options).not.toBeFalsy();
+  expect(options!.length).toBe(2);
 
   expect(type.getProperty("title")!.valid).toBe(true);
   expect(type.getProperty("type")!.valid).toBe(true);

@@ -1,13 +1,16 @@
+import { IOption } from "../Common";
+
 import { IModelType, ISimpleType, types } from "mobx-state-tree";
 
 export interface IMetaAttrs<V, T> {
   readonly component?: T | null;
   readonly help?: string | null;
+  readonly error?: string | null;
   readonly sequence?: number | null;
-  readonly errors?: string[] | null;
   readonly initial?: V | null;
   readonly value?: V | null;
   readonly default?: V | null;
+  readonly options?: Array<IOption<V>> | null;
 }
 
 export interface IMetaConfig<V, T> extends IMetaAttrs<V, T> {
@@ -22,17 +25,14 @@ export interface IMeta<V, T> extends IMetaAttrs<V, T> {
   readonly disabled: boolean;
   readonly visible: boolean;
   readonly mandatory: boolean;
-  readonly valid: boolean;
   setName(name: string): void;
   setMandatory(mandatory: boolean): void;
   setDisabled(disabled: boolean): void;
   setVisible(visible: boolean): void;
-  addError(error: string): void;
-  addErrors(errors: string[]): void;
-  clearErrors(): void;
   setInitial(initial: V): void;
   setDefault(defaultV: V): void;
   setValue(value: V): void;
+  setOptions(options: Array<IOption<V>>): void;
 }
 
 export function createMeta<
@@ -53,11 +53,14 @@ export function createMeta<
       ) as ISimpleType<T>),
       default: types.optional(kind, defaultv),
       disabled: types.optional(types.boolean, false),
-      errors: types.optional(types.array(types.string), []),
+      error: types.maybe(types.string),
       help: types.maybe(types.string),
       initial: types.optional(kind, defaultv),
       mandatory: types.optional(types.boolean, false),
       name: types.optional(types.string, ""),
+      options: types.maybe(
+        types.array(types.model({ label: types.string, value: kind }))
+      ),
       sequence: types.maybe(types.number),
       value: types.optional(kind, defaultv),
       visible: types.optional(types.boolean, true)
@@ -80,15 +83,6 @@ export function createMeta<
       setVisible(visible: boolean): void {
         it.visible = visible;
       },
-      addError(error: string): void {
-        it.errors.push(error);
-      },
-      addErrors(errors: string[]): void {
-        it.errors.push(...errors);
-      },
-      clearErrors(): void {
-        it.errors.length = 0;
-      },
       setInitial(initial: V): void {
         it.initial = initial;
       },
@@ -97,11 +91,9 @@ export function createMeta<
       },
       setDefault(defaultV: V): void {
         it.default = defaultV;
-      }
-    }))
-    .views(it => ({
-      get valid(): boolean {
-        return it.errors!.length === 0;
+      },
+      setOptions(options: Array<IOption<V>>): void {
+        it.options = options as any;
       }
     })) as any;
   return Meta;

@@ -9,4 +9,9 @@ export interface IFieldErrors {
   properties?: { [key: string]: string[] | IFieldErrors };
 }
 
+export interface IOption<T> {
+  label: string;
+  value: T;
+}
+
 export type __IModelType = IModelType<any, any>;

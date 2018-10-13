@@ -5,7 +5,6 @@ const config: IStringConfig = {
   meta: {
     component: "password",
     help: "testing",
-    length: 50,
     value: "sk.sk"
   },
   minLength: 4,
@@ -28,7 +27,6 @@ test("test string meta", () => {
   expect(type.meta).not.toBeNull();
   expect(type.meta.component).toBe("password");
   expect(type.meta.help).toBe("testing");
-  expect(type.meta.length).toBe(50);
   expect(type.minLength).toBe(4);
 });
 
@@ -56,7 +54,7 @@ test("validate minLength valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.meta.errors!.slice(0)).toEqual([]);
+  expect(type.errors!.slice(0)).toEqual([]);
 });
 
 test("validate minLength invalid", async () => {
@@ -68,7 +66,7 @@ test("validate minLength invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.meta.errors!.slice(0)).toEqual([
+  expect(type.errors!.slice(0)).toEqual([
     "should NOT be shorter than 4 characters"
   ]);
 });
@@ -82,7 +80,7 @@ test("validate maxLength valid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.meta.errors!.slice(0)).toEqual([]);
+  expect(type.errors!.slice(0)).toEqual([]);
 });
 
 test("validate maxLength invalid", async () => {
@@ -94,7 +92,7 @@ test("validate maxLength invalid", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.meta.errors!.slice(0)).toEqual([
+  expect(type.errors!.slice(0)).toEqual([
     "should NOT be longer than 6 characters"
   ]);
 });
@@ -122,7 +120,7 @@ test("test valid pattern", async () => {
   await type.validate();
 
   expect(type.valid).toBe(true);
-  expect(type.meta.errors!.slice(0)).toEqual([]);
+  expect(type.errors!.slice(0)).toEqual([]);
 });
 
 test("test invalid pattern", async () => {
@@ -139,7 +137,7 @@ test("test invalid pattern", async () => {
   await type.validate();
 
   expect(type.valid).toBe(false);
-  expect(type.meta.errors!.slice(0)).toEqual([
+  expect(type.errors!.slice(0)).toEqual([
     "should match pattern /^(2[0-4]|[01][0-9]):([0-5][0-9]):(60|[0-5][0-9])$/"
   ]);
 });

@@ -289,10 +289,10 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
               errors.items[index] = (element! as IObject | IArray)
                 .getFieldErrors
                 ? (element! as IObject | IArray).getFieldErrors()
-                : toJS(element.meta.errors);
+                : toJS(element.errors);
               return errors;
             },
-            { errors: toJS(it.meta.errors), items: [] }
+            { errors: toJS(it.errors), items: [] }
           );
         },
         get data(): Array<IAnything | null> {
@@ -306,7 +306,7 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         },
         get valid(): boolean {
           return (
-            it.meta.errors!.length === 0 &&
+            it.errors!.length === 0 &&
             it.elements.every(element => element!.valid)
           );
         },

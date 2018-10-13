@@ -17,7 +17,7 @@ async function test_format(
     await type.validate();
 
     expect(type.valid).toBe(result);
-    expect(type.meta.errors!.slice(0)).toEqual(
+    expect(type.errors!.slice(0)).toEqual(
       result ? [] : [`should match format ${config.format}`]
     );
   });
