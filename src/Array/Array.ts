@@ -182,10 +182,10 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         async push(): Promise<void> {
           if (it.dynamic) {
             const meta = (it.items as IType).meta;
-            const value = meta ? meta.default! : null;
+            const value = meta ? meta.default! : undefined;
             const index = it.meta.value!.length;
-            it.updateIndexValue(index, value);
-            it.elements.push(it.getConfig(value, index, it.items));
+            it.updateIndexValue(index, value as any);
+            it.elements.push(it.getConfig(value as any, index, it.items));
             await it.validate();
           }
         },
