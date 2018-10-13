@@ -104,7 +104,7 @@ export const StringMeta: IModelType<
     "textarea"
   ),
   types.model({
-    length: types.optional(types.number, undefined)
+    length: types.optional(types.number, -1)
   })
 );
 
