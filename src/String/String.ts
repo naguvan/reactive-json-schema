@@ -14,7 +14,8 @@ export type IStringComponent =
   | "date"
   | "color"
   | "password"
-  | "date-time"
+  | "datetime"
+  | "time"
   | "textarea";
 
 export interface IStringMetaAttrs extends IMetaAttrs<string, IStringComponent> {
@@ -101,8 +102,9 @@ export const StringMeta: IModelType<
     "color",
     "date",
     "password",
-    "date-time",
-    "textarea"
+    "date",
+    "textarea",
+    "time"
   ),
   types.model({
     length: types.optional(types.number, -1)
