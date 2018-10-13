@@ -4,11 +4,11 @@ describe("Boolean testing", () => {
   const config: IBooleanConfig = {
     meta: {
       component: "radio",
-      sequence: 40
+      sequence: 40,
+      value: true
     },
     title: "naguvan",
-    type: "boolean",
-    value: true
+    type: "boolean"
   };
 
   test("check boolean default meta", () => {
@@ -32,6 +32,7 @@ describe("Boolean testing", () => {
     expect(type.type).toBe("boolean");
     expect(type.title).toBe("naguvan");
     expect(type.data).toBe(true);
+    expect(type.meta.value).toBe(true);
   });
 
   test("change boolean name type", () => {

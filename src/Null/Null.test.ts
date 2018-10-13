@@ -4,11 +4,11 @@ describe("Null testing", () => {
   const config: INullConfig = {
     meta: {
       component: "para",
-      help: "null type test"
+      help: "null type test",
+      value: null
     },
     title: "naguvan",
-    type: "null",
-    value: null
+    type: "null"
   };
 
   test("check null default meta", () => {
@@ -31,7 +31,7 @@ describe("Null testing", () => {
     const type = Null.create(config);
     expect(type.type).toBe("null");
     expect(type.title).toBe("naguvan");
-    expect(type.value).toBe(null);
+    expect(type.meta.value).toBe(null);
   });
 
   test("change null name type", () => {

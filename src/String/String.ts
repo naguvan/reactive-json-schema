@@ -17,7 +17,7 @@ export type IStringComponent =
   | "textarea";
 
 export interface IStringMetaAttrs extends IMetaAttrs<string, IStringComponent> {
-  readonly length: number;
+  readonly length?: number;
 }
 
 export interface IStringMetaConfig

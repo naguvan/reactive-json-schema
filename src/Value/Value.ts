@@ -8,7 +8,6 @@ import { IMeta, IMetaConfig } from "../Meta";
 
 export interface IValueAttrs<V> {
   readonly title?: string | null;
-  readonly value: V | null;
   readonly enum?: V[] | null;
   readonly const?: V | null;
   readonly options?: Array<{ label: string; value: V }> | null;
@@ -80,8 +79,7 @@ export function createValue<
           types.array(types.model({ label: types.string, value: kind }))
         ),
         title: types.maybe(types.string),
-        type: types.literal(type),
-        value: types.optional(kind, defaultv)
+        type: types.literal(type)
       })
     )
     .volatile(it => ({ _validating: false, syncing: false }))
@@ -91,7 +89,6 @@ export function createValue<
           const { title } = it;
           it.meta.setName(title.toLowerCase().replace(" ", "-"));
         }
-        it.meta.setInitial(it.value);
         if (
           it.enum != null &&
           it.enum.length > 0 &&
@@ -109,9 +106,6 @@ export function createValue<
       },
       tryValue(value: IAnything): boolean {
         return kind.is(value);
-      },
-      setValue(value: V): void {
-        it.value = value;
       }
     }))
     .actions(it => ({
@@ -157,24 +151,25 @@ export function createValue<
         value: IAnything | undefined | null
       ): Promise<string[]> {
         const validities = kind.validate(value, []);
-        if (validities.length > 0) {
-          return validities.map(validity => validity.message!);
+        const errors: string[] = validities
+          .map(validity => validity.message!)
+          .filter(message => !!message);
+        if (errors.length === 0) {
+          errors.push(...it.syncValidate(value as V));
+          errors.push(...(await it.asyncValidate(value as V)));
         }
-        const errors: string[] = [];
-        errors.push(...it.syncValidate(value as V));
-        errors.push(...(await it.asyncValidate(value as V)));
         return errors;
       }
     }))
     .views(it => ({
       get modified(): boolean {
-        return it.value !== it.meta.initial;
+        return it.meta.value !== it.meta.initial;
       },
       get valid(): boolean {
         return it.meta.valid;
       },
       get data(): V {
-        return toJS(it.value);
+        return toJS(it.meta.value) as V;
       },
       get validating(): boolean {
         return it._validating;
@@ -182,7 +177,7 @@ export function createValue<
     }))
     .actions(it => ({
       reset(): void {
-        it.value = it.meta.initial as V;
+        it.meta.setValue(it.meta.initial as V);
         it.meta.clearErrors();
       },
       validate: flow<void>(function*() {
@@ -191,9 +186,15 @@ export function createValue<
         }
         it.meta.clearErrors();
         it._validating = true;
-        it.meta.addErrors(yield it.tryValidate(it.value));
+        it.meta.addErrors(yield it.tryValidate(it.meta.value));
         it._validating = false;
       })
+    }))
+    .actions(it => ({
+      // protected only method
+      setValue(value: V): void {
+        it.meta.setValue(value);
+      }
     }))
     .actions(it => ({
       async sync(value: V): Promise<void> {

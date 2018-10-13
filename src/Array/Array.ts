@@ -113,11 +113,11 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           // const values = [...it.value];
           // values[index] = value;
           // it.setValue(values);
-          it.value![index] = value;
+          it.meta.value![index] = value;
         },
 
         removeIndexValue(index: number): void {
-          it.value!.splice(index, 1);
+          it.meta.value!.splice(index, 1);
         }
       }))
       .actions(it => ({
@@ -127,12 +127,14 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           // console.info(value);
           const type = Type.create({
             ...element,
-            value: toJS(value)
+            meta: {
+              value: toJS(value)
+            }
           } as ITypeConfig);
           // const type = clone(it.items as any);
           // type.setValue(value);
-          observe(type, "value", changes => {
-            it.updateIndexValue(index, type.value);
+          observe(type.meta, "value", changes => {
+            it.updateIndexValue(index, type.meta.value as any);
             // setTimeout(
             //     () =>
             //         it.updateIndexValue(
@@ -172,7 +174,7 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         async push(): Promise<void> {
           if (it.dynamic) {
             const value = (it.items as IType).meta.default!;
-            const index = it.value!.length;
+            const index = it.meta.value!.length;
             it.updateIndexValue(index, value);
             it.elements.push(it.getConfig(value, index, it.items));
             await it.validate();
@@ -197,7 +199,7 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           if (it.maxItems !== null && it.maxItems < 0) {
             throw new TypeError(`maxItems can not be negative`);
           }
-          it.updateElements(toJS(it.value));
+          it.updateElements(toJS(it.meta.value) as any);
         }
       }))
       .actions(it => ({
@@ -261,12 +263,13 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           return errors;
         },
         setValue(value: Array<IAnything | null>): void {
-          (it as any).value = value;
+          // (it as any).value = value;
           // if (value) {
           //     for (const [index, element] of it.elements.entries()) {
           //         (element as any).setValue(value[index]);
           //     }
           // }
+          it.meta.setValue(value);
           it.updateElements(toJS(value));
         }
       }))
@@ -277,7 +280,7 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
               data[index] = element!.data;
               return data;
             },
-            [...toJS(it.value || [])]
+            [...toJS(it.meta.value || [])]
           );
         },
         get valid(): boolean {

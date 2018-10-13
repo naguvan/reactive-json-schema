@@ -7,11 +7,14 @@ const config: IValueConfig<
   number,
   "number",
   "range",
-  IMeta<number, "range">
+  IMetaConfig<number, "range">
 > = {
+  meta: {
+    component: "range",
+    value: 10
+  },
   title: "naguvan",
-  type: "number",
-  value: 10
+  type: "number"
 };
 
 const ValueMeta = createMeta<
@@ -27,7 +30,10 @@ const Value = createValue<
   "range",
   IMetaConfig<number, "range">,
   IMeta<number, "range">
->("number", types.number, 0, ValueMeta, { component: "range" });
+>("number", types.number, 0, ValueMeta, {
+  component: "range",
+  value: 0
+});
 
 test("check type meta", () => {
   const type = Value.create(config);
@@ -41,7 +47,7 @@ test("createValue type type", () => {
   const type = Value.create(config);
   expect(type.type).toBe("number");
   expect(type.title).toBe("naguvan");
-  expect(type.value).toBe(10);
+  expect(type.meta.value).toBe(10);
   expect(type.meta.initial).toBe(10);
   expect(type.modified).toBe(false);
 
@@ -55,19 +61,24 @@ test("createValue type type", () => {
 });
 
 test("change type value", () => {
-  const type = Value.create({ ...config, value: 20 });
+  const type = Value.create({
+    ...config,
+    meta: {
+      value: 20
+    }
+  });
 
-  expect(type.value).toBe(20);
+  expect(type.meta.value).toBe(20);
   expect(type.meta.initial).toBe(20);
   expect(type.modified).toBe(false);
 
   type.setValue(30);
-  expect(type.value).toBe(30);
+  expect(type.meta.value).toBe(30);
   expect(type.meta.initial).toBe(20);
   expect(type.modified).toBe(true);
 
   type.reset();
-  expect(type.value).toBe(20);
+  expect(type.meta.value).toBe(20);
   expect(type.modified).toBe(false);
 });
 
@@ -149,7 +160,7 @@ test("validate const valid", async () => {
   const type = Value.create({ ...config, const: 5 });
 
   type.setValue(5);
-  expect(type.value).toBe(5);
+  expect(type.meta.value).toBe(5);
 
   await type.validate();
 
@@ -161,7 +172,7 @@ test("validate const invalid", async () => {
   const type = Value.create({ ...config, const: 5 });
 
   type.setValue(10);
-  expect(type.value).toBe(10);
+  expect(type.meta.value).toBe(10);
 
   await type.validate();
 
@@ -173,7 +184,7 @@ test("validate enum valid", async () => {
   const type = Value.create({ ...config, enum: [5, 10] });
 
   type.setValue(5);
-  expect(type.value).toBe(5);
+  expect(type.meta.value).toBe(5);
 
   await type.validate();
 
@@ -185,7 +196,7 @@ test("validate enum invalid", async () => {
   const type = Value.create({ ...config, enum: [5, 20] });
 
   type.setValue(10);
-  expect(type.value).toBe(10);
+  expect(type.meta.value).toBe(10);
 
   await type.validate();
 

@@ -4,7 +4,7 @@ import { toJS } from "mobx";
 
 import { keys, unique } from "../utils";
 
-import { mappings } from "../Common";
+import { IAnything, mappings } from "../Common";
 
 import { createType } from "../Type";
 
@@ -201,7 +201,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
             }
           }
 
-          it.updateProps(toJS(it.value));
+          it.updateProps(toJS(it.meta.value as IAnything));
         }
       }))
       .actions(it => ({
@@ -231,7 +231,6 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
               }
             }
           }
-
           for (const property of it.getProperties()) {
             await it.getProperty(property)!.validate();
           }
@@ -284,7 +283,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
           return errors;
         },
         setValue(value: object | null): void {
-          (it as any).value = value;
+          it.meta.setValue(value);
           it.updateProps(toJS(value));
         },
         reset(): void {
@@ -302,7 +301,7 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
               return data;
             },
             {
-              ...toJS(it.value || {})
+              ...toJS(it.meta.value || {})
             }
           );
         },

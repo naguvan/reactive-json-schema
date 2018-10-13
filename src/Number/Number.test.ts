@@ -5,11 +5,11 @@ describe("Number testing", () => {
     meta: {
       component: "range",
       help: "age selector",
-      sequence: 10
+      sequence: 10,
+      value: 50
     },
     title: "naguvan",
-    type: "number",
-    value: 50
+    type: "number"
   };
 
   test("check number default meta", () => {
@@ -26,6 +26,7 @@ describe("Number testing", () => {
     expect(type.meta.component).toBe("range");
     expect(type.meta.help).toBe("age selector");
     expect(type.meta.sequence).toBe(10);
+    expect(type.meta.initial).toBe(50);
   });
 
   test("create number type", () => {

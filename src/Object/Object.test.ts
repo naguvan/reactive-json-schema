@@ -16,14 +16,19 @@ describe("Object testing", () => {
     },
     properties: {
       age: {
+        meta: {
+          value: 1
+        },
         title: "age",
-        type: "number",
-        value: 1
+        type: "number"
       },
       name: {
+        meta: {
+          length: 50,
+          value: "naguvan"
+        },
         title: "name",
-        type: "string",
-        value: "naguvan"
+        type: "string"
       }
     },
     title: "naguvan",
@@ -76,9 +81,12 @@ describe("Object testing", () => {
         city: {
           properties: {
             name: {
+              meta: {
+                length: 100,
+                value: "chennai"
+              },
               title: "name",
-              type: "string",
-              value: "chennai"
+              type: "string"
             }
           },
           title: "city",
@@ -185,14 +193,19 @@ describe("Object testing", () => {
     const type = Object.create({
       properties: {
         age: {
+          meta: {
+            value: 1
+          },
           title: "age",
-          type: "number",
-          value: 1
+          type: "number"
         },
         name: {
+          meta: {
+            length: 100,
+            value: "naguvan"
+          },
           title: "name",
-          type: "string",
-          value: "naguvan"
+          type: "string"
         }
       },
 
@@ -219,9 +232,12 @@ describe("Object testing", () => {
           type: "number"
         },
         name: {
+          meta: {
+            length: 100,
+            value: "naguvan"
+          },
           title: "name",
-          type: "string",
-          value: "naguvan"
+          type: "string"
         }
       },
       required: ["name", "age"],
@@ -230,7 +246,7 @@ describe("Object testing", () => {
     });
 
     type.setValue({ name: "naguvan" });
-    expect(toJS(type.value)).toEqual({ name: "naguvan" });
+    expect(toJS(type.meta.value)).toEqual({ name: "naguvan" });
 
     await type.validate();
 
@@ -407,16 +423,21 @@ describe("Object testing", () => {
       properties: {
         age: {
           maximum: 15,
+          meta: {
+            value: 1
+          },
           minimum: 5,
           title: "age",
-          type: "number",
-          value: 1
+          type: "number"
         },
         name: {
+          meta: {
+            length: 100,
+            value: "naguvan"
+          },
           minLength: 5,
           title: "name",
-          type: "string",
-          value: "naguvan"
+          type: "string"
         }
       },
       title: "naguvan",
@@ -450,9 +471,12 @@ describe("Object testing", () => {
           properties: {
             name: {
               maxLength: 7,
+              meta: {
+                length: 100,
+                value: "madurai"
+              },
               title: "name",
-              type: "string",
-              value: "madurai"
+              type: "string"
             }
           },
           title: "city",
@@ -487,9 +511,12 @@ describe("Object testing", () => {
           properties: {
             name: {
               maxLength: 7,
+              meta: {
+                length: 100,
+                value: "madurai"
+              },
               title: "name",
-              type: "string",
-              value: "madurai"
+              type: "string"
             }
           },
           title: "city",

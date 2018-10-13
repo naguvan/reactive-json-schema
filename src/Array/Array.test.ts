@@ -335,9 +335,11 @@ describe("Array testing", () => {
       items: {
         type: "number"
       },
+      meta: {
+        value: [1, 2, 3]
+      },
       title: "Array",
-      type: "array",
-      value: [1, 2, 3]
+      type: "array"
     });
     expect(type.type).toBe("array");
 

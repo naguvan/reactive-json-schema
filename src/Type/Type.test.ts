@@ -13,10 +13,13 @@ const Type = createType();
 
 test("create string type ", () => {
   const type = Type.create({
+    meta: {
+      length: 100,
+      value: "sk"
+    },
     minLength: 4,
     title: "naguvan",
-    type: "string",
-    value: "sk"
+    type: "string"
   }) as IString;
   expect(type.type).toBe("string");
   expect(type.title).toBe("naguvan");
@@ -26,9 +29,11 @@ test("create string type ", () => {
 
 test("create number type ", () => {
   const type = Type.create({
+    meta: {
+      value: 50
+    },
     title: "naguvan",
-    type: "number",
-    value: 50
+    type: "number"
   }) as INumber;
   expect(type.type).toBe("number");
   expect(type.title).toBe("naguvan");
@@ -37,9 +42,11 @@ test("create number type ", () => {
 
 test("create boolean type ", () => {
   const type = Type.create({
+    meta: {
+      value: true
+    },
     title: "naguvan",
-    type: "boolean",
-    value: true
+    type: "boolean"
   });
   expect(type.type).toBe("boolean");
   expect(type.title).toBe("naguvan");
@@ -49,9 +56,11 @@ test("create boolean type ", () => {
 
 test("create null type ", () => {
   const type = Type.create({
+    meta: {
+      value: null
+    },
     title: "naguvan",
-    type: "null",
-    value: null
+    type: "null"
   });
   expect(type.type).toBe("null");
   expect(type.title).toBe("naguvan");
@@ -62,14 +71,19 @@ test("create object type", () => {
   const type = Type.create({
     properties: {
       age: {
+        meta: {
+          value: 1
+        },
         title: "age",
-        type: "number",
-        value: 1
+        type: "number"
       },
       name: {
+        meta: {
+          length: 100,
+          value: "naguvan"
+        },
         title: "name",
-        type: "string",
-        value: "naguvan"
+        type: "string"
       }
     },
     title: "naguvan",
@@ -133,12 +147,12 @@ test("test snapshot create", () => {
           initial: 0,
           mandatory: false,
           name: "",
+          value: 0,
           visible: true
         },
         multipleOf: 2,
         title: "age",
-        type: "number",
-        value: 0
+        type: "number"
       },
       name: {
         meta: {
@@ -147,12 +161,12 @@ test("test snapshot create", () => {
           length: 30,
           mandatory: false,
           name: "",
+          value: "",
           visible: true
         },
         minLength: 3,
         title: "name",
-        type: "string",
-        value: ""
+        type: "string"
       }
     },
     required: null,

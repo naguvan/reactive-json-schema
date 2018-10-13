@@ -5,12 +5,12 @@ const config: IStringConfig = {
   meta: {
     component: "password",
     help: "testing",
-    length: 50
+    length: 50,
+    value: "sk.sk"
   },
   minLength: 4,
   title: "naguvan",
-  type: "string",
-  value: "sk.sk"
+  type: "string"
 };
 
 test("create string type", () => {

@@ -6,6 +6,7 @@ export interface IMetaAttrs<V, T> {
   readonly sequence?: number | null;
   readonly errors?: string[] | null;
   readonly initial?: V | null;
+  readonly value?: V | null;
   readonly default?: V | null;
 }
 
@@ -30,6 +31,8 @@ export interface IMeta<V, T> extends IMetaAttrs<V, T> {
   addErrors(errors: string[]): void;
   clearErrors(): void;
   setInitial(initial: V): void;
+  setDefault(defaultV: V): void;
+  setValue(value: V): void;
 }
 
 export function createMeta<
@@ -56,8 +59,14 @@ export function createMeta<
       mandatory: types.optional(types.boolean, false),
       name: types.optional(types.string, ""),
       sequence: types.maybe(types.number),
+      value: types.optional(kind, defaultv),
       visible: types.optional(types.boolean, true)
     })
+    .actions(it => ({
+      afterCreate() {
+        it.initial = it.value;
+      }
+    }))
     .actions(it => ({
       setName(name: string): void {
         it.name = name;
@@ -82,6 +91,12 @@ export function createMeta<
       },
       setInitial(initial: V): void {
         it.initial = initial;
+      },
+      setValue(value: V): void {
+        it.value = value;
+      },
+      setDefault(defaultV: V): void {
+        it.default = defaultV;
       }
     }))
     .views(it => ({
