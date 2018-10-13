@@ -118,8 +118,10 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           // values[index] = value;
           // it.setValue(values);
           it.meta.value![index] = value;
-          // TODO: Need to fix for all types
-          (it.elements[index]! as IObject).setValue(value);
+          if (it.elements.length > index) {
+            // TODO: Need to fix for all types
+            (it.elements[index]! as IObject).setValue(value);
+          }
         },
 
         removeIndexValue(index: number): void {
@@ -179,7 +181,8 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
 
         async push(): Promise<void> {
           if (it.dynamic) {
-            const value = (it.items as IType).meta.default!;
+            const meta = (it.items as IType).meta;
+            const value = meta ? meta.default! : null;
             const index = it.meta.value!.length;
             it.updateIndexValue(index, value);
             it.elements.push(it.getConfig(value, index, it.items));

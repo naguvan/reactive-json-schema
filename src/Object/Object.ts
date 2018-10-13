@@ -8,11 +8,9 @@ import { IAnything, IFieldErrors, mappings } from "../Common";
 
 import { IArray } from "../Array";
 
-import { createType } from "../Type";
-
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { IType, ITypeConfig } from "../Type";
+import { createType, IType, ITypeConfig } from "../Type";
 
 import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 

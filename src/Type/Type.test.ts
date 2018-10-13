@@ -411,9 +411,11 @@ test("form sample schema", async () => {
 
   expect(type.getProperty("ipv4")!.valid).toBe(true);
 
-  await type.sync({ array: [{}, {}] });
+  await type.sync({ array: [{}] });
 
   const array = type.getProperty("array")! as IArray;
+
+  await array.push();
 
   const item = array.elements[0] as IObject;
 
