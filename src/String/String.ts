@@ -98,6 +98,7 @@ export const StringMeta: IModelType<
     types.string,
     "",
     "text",
+    "color",
     "date",
     "password",
     "date-time",

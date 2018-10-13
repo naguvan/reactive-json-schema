@@ -4,7 +4,9 @@ import { toJS } from "mobx";
 
 import { keys, unique } from "../utils";
 
-import { IAnything, mappings } from "../Common";
+import { IAnything, IFieldErrors, mappings } from "../Common";
+
+import { IArray } from "../Array";
 
 import { createType } from "../Type";
 
@@ -59,6 +61,7 @@ export interface IObject
   readonly modified: boolean;
   getProperty(property: string): IType | undefined;
   getProperties(): string[];
+  getFieldErrors(): IFieldErrors;
 }
 
 mappings.object = types.late("Object", createObject);
@@ -292,6 +295,19 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
         }
       }))
       .views(it => ({
+        getFieldErrors(): IFieldErrors {
+          const properties = it.getProperties();
+          return properties.reduce(
+            (errors: any, key: string) => {
+              const type = it.getProperty(key)!;
+              errors.properties[key] = (type as IObject | IArray).getFieldErrors
+                ? (type as IObject | IArray).getFieldErrors()
+                : toJS(type.meta.errors);
+              return errors;
+            },
+            { errors: toJS(it.meta.errors), properties: {} }
+          );
+        },
         get data(): object {
           const properties = it.getProperties();
           return properties.reduce(

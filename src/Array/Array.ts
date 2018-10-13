@@ -2,12 +2,14 @@ import { detach, IModelType, types } from "mobx-state-tree";
 
 import { observe, toJS } from "mobx";
 
-import { IAnything, mappings } from "../Common";
+import { IAnything, IFieldErrors, mappings } from "../Common";
 import { createType, IType, ITypeConfig } from "../Type";
 import { isArray, unique } from "../utils";
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
 import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
+
+import { IObject } from "../Object";
 
 export type IArrayComponent = "list" | "layout";
 
@@ -54,6 +56,8 @@ export interface IArray
   readonly dynamic: boolean;
   push(): Promise<void>;
   remove(index: number): Promise<void>;
+  getFieldErrors(): IFieldErrors;
+  updateIndexValue(index: number, value: IAnything | null): void;
 }
 
 mappings.array = types.late("Array", createArray);
@@ -114,6 +118,8 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           // values[index] = value;
           // it.setValue(values);
           it.meta.value![index] = value;
+          // TODO: Need to fix for all types
+          (it.elements[index]! as IObject).setValue(value);
         },
 
         removeIndexValue(index: number): void {
@@ -274,6 +280,18 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         }
       }))
       .views(it => ({
+        getFieldErrors(): IFieldErrors {
+          return it.elements.reduce(
+            (errors: any, element, index) => {
+              errors.items[index] = (element! as IObject | IArray)
+                .getFieldErrors
+                ? (element! as IObject | IArray).getFieldErrors()
+                : toJS(element.meta.errors);
+              return errors;
+            },
+            { errors: toJS(it.meta.errors), items: [] }
+          );
+        },
         get data(): Array<IAnything | null> {
           return it.elements.reduce(
             (data: Array<IAnything | null>, element, index) => {
