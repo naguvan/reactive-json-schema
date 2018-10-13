@@ -12,6 +12,7 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 export type IStringComponent =
   | "text"
   | "date"
+  | "color"
   | "password"
   | "date-time"
   | "textarea";
