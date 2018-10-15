@@ -3,205 +3,207 @@ import { createValue, IValueConfig } from "./Value";
 
 import { createMeta, IMeta, IMetaConfig } from "../Meta";
 
-const config: IValueConfig<
-  number,
-  "number",
-  "range",
-  IMetaConfig<number, "range">
-> = {
-  meta: {
+describe("value test cases", () => {
+  const config: IValueConfig<
+    number,
+    "number",
+    "range",
+    IMetaConfig<number, "range">
+  > = {
+    meta: {
+      component: "range",
+      value: 10
+    },
+    title: "naguvan",
+    type: "number"
+  };
+
+  const ValueMeta = createMeta<
+    number,
+    "range",
+    IMetaConfig<number, "range">,
+    IMeta<number, "range">
+  >(types.number, 0, "range");
+
+  const Value = createValue<
+    number,
+    "number",
+    "range",
+    IMetaConfig<number, "range">,
+    IMeta<number, "range">
+  >("number", types.number, 0, ValueMeta, {
     component: "range",
-    value: 10
-  },
-  title: "naguvan",
-  type: "number"
-};
-
-const ValueMeta = createMeta<
-  number,
-  "range",
-  IMetaConfig<number, "range">,
-  IMeta<number, "range">
->(types.number, 0, "range");
-
-const Value = createValue<
-  number,
-  "number",
-  "range",
-  IMetaConfig<number, "range">,
-  IMeta<number, "range">
->("number", types.number, 0, ValueMeta, {
-  component: "range",
-  value: 0
-});
-
-test("check type meta", () => {
-  const type = Value.create(config);
-  expect(type.meta).not.toBeNull();
-  expect(type.meta.component).toBe("range");
-  expect(type.meta.sequence).toBeNull();
-  expect(type.meta.help).toBeNull();
-});
-
-test("createValue type type", () => {
-  const type = Value.create(config);
-  expect(type.type).toBe("number");
-  expect(type.title).toBe("naguvan");
-  expect(type.meta.value).toBe(10);
-  expect(type.meta.initial).toBe(10);
-  expect(type.modified).toBe(false);
-
-  expect(type.meta.name).toBe(type.title);
-  expect(type.meta.mandatory).toBe(false);
-  expect(type.meta.disabled).toBe(false);
-  expect(type.meta.visible).toBe(true);
-
-  expect(type.validating).toBe(false);
-  expect(type.errors!.length).toBe(0);
-});
-
-test("change type value", () => {
-  const type = Value.create({
-    ...config,
-    meta: {
-      value: 20
-    }
+    value: 0
   });
 
-  expect(type.meta.value).toBe(20);
-  expect(type.meta.initial).toBe(20);
-  expect(type.modified).toBe(false);
-
-  type.setValue(30);
-  expect(type.meta.value).toBe(30);
-  expect(type.meta.initial).toBe(20);
-  expect(type.modified).toBe(true);
-
-  type.reset();
-  expect(type.meta.value).toBe(20);
-  expect(type.modified).toBe(false);
-});
-
-test("change type name", () => {
-  const type = Value.create(config);
-
-  type.meta.setName("skclusive");
-  expect(type.meta.name).toBe("skclusive");
-});
-
-test("change mandatory property", () => {
-  const type = Value.create(config);
-
-  expect(type.meta.mandatory).toBe(false);
-
-  type.meta.setMandatory(true);
-  expect(type.meta.mandatory).toBe(true);
-});
-
-test("change disabled property", () => {
-  const type = Value.create({
-    ...config,
-    meta: {
-      disabled: true
-    }
+  test("check type meta", () => {
+    const type = Value.create(config);
+    expect(type.meta).not.toBeNull();
+    expect(type.meta.component).toBe("range");
+    expect(type.meta.sequence).toBeNull();
+    expect(type.meta.help).toBeNull();
   });
 
-  expect(type.meta.disabled).toBe(true);
+  test("createValue type type", () => {
+    const type = Value.create(config);
+    expect(type.type).toBe("number");
+    expect(type.title).toBe("naguvan");
+    expect(type.meta.value).toBe(10);
+    expect(type.meta.initial).toBe(10);
+    expect(type.modified).toBe(false);
 
-  type.meta.setDisabled(false);
-  expect(type.meta.disabled).toBe(false);
-});
+    expect(type.meta.name).toBe(type.title);
+    expect(type.meta.mandatory).toBe(false);
+    expect(type.meta.disabled).toBe(false);
+    expect(type.meta.visible).toBe(true);
 
-test("change visible property", () => {
-  const type = Value.create({
-    ...config,
-    meta: {
-      visible: false
-    }
+    expect(type.validating).toBe(false);
+    expect(type.errors!.length).toBe(0);
   });
 
-  expect(type.meta.visible).toBe(false);
+  test("change type value", () => {
+    const type = Value.create({
+      ...config,
+      meta: {
+        value: 20
+      }
+    });
 
-  type.meta.setDisabled(false);
-  expect(type.meta.visible).toBe(false);
+    expect(type.meta.value).toBe(20);
+    expect(type.meta.initial).toBe(20);
+    expect(type.modified).toBe(false);
 
-  type.meta.setVisible(true);
-  expect(type.meta.visible).toBe(true);
-});
+    type.setValue(30);
+    expect(type.meta.value).toBe(30);
+    expect(type.meta.initial).toBe(20);
+    expect(type.modified).toBe(true);
 
-test("change error property", () => {
-  const type = Value.create(config);
+    type.reset();
+    expect(type.meta.value).toBe(20);
+    expect(type.modified).toBe(false);
+  });
 
-  expect(type.errors!.length).toBe(0);
-  expect(type.valid).toBe(true);
+  test("change type name", () => {
+    const type = Value.create(config);
 
-  type.addError("this type has some error");
-  expect(type.errors!.slice(0)).toEqual(["this type has some error"]);
-  expect(type.valid).toBe(false);
+    type.meta.setName("skclusive");
+    expect(type.meta.name).toBe("skclusive");
+  });
 
-  type.reset();
-  expect(type.errors!.length).toBe(0);
-  expect(type.valid).toBe(true);
-});
+  test("change mandatory property", () => {
+    const type = Value.create(config);
 
-test("check validating property", async () => {
-  const type = Value.create(config);
+    expect(type.meta.mandatory).toBe(false);
 
-  expect(type.validating).toBe(false);
+    type.meta.setMandatory(true);
+    expect(type.meta.mandatory).toBe(true);
+  });
 
-  const validate = type.validate();
-  expect(type.validating).toBe(true);
+  test("change disabled property", () => {
+    const type = Value.create({
+      ...config,
+      meta: {
+        disabled: true
+      }
+    });
 
-  await validate;
-  expect(type.validating).toBe(false);
-});
+    expect(type.meta.disabled).toBe(true);
 
-test("validate const valid", async () => {
-  const type = Value.create({ ...config, const: 5 });
+    type.meta.setDisabled(false);
+    expect(type.meta.disabled).toBe(false);
+  });
 
-  type.setValue(5);
-  expect(type.meta.value).toBe(5);
+  test("change visible property", () => {
+    const type = Value.create({
+      ...config,
+      meta: {
+        visible: false
+      }
+    });
 
-  await type.validate();
+    expect(type.meta.visible).toBe(false);
 
-  expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    type.meta.setDisabled(false);
+    expect(type.meta.visible).toBe(false);
 
-test("validate const invalid", async () => {
-  const type = Value.create({ ...config, const: 5 });
+    type.meta.setVisible(true);
+    expect(type.meta.visible).toBe(true);
+  });
 
-  type.setValue(10);
-  expect(type.meta.value).toBe(10);
+  test("change error property", () => {
+    const type = Value.create(config);
 
-  await type.validate();
+    expect(type.errors!.length).toBe(0);
+    expect(type.valid).toBe(true);
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
-});
+    type.addError("this type has some error");
+    expect(type.errors!.slice(0)).toEqual(["this type has some error"]);
+    expect(type.valid).toBe(false);
 
-test("validate enum valid", async () => {
-  const type = Value.create({ ...config, enum: [5, 10] });
+    type.reset();
+    expect(type.errors!.length).toBe(0);
+    expect(type.valid).toBe(true);
+  });
 
-  type.setValue(5);
-  expect(type.meta.value).toBe(5);
+  test("check validating property", async () => {
+    const type = Value.create(config);
 
-  await type.validate();
+    expect(type.validating).toBe(false);
 
-  expect(type.valid).toBe(true);
-  expect(type.errors!.slice(0)).toEqual([]);
-});
+    const validate = type.validate();
+    expect(type.validating).toBe(true);
 
-test("validate enum invalid", async () => {
-  const type = Value.create({ ...config, enum: [5, 20] });
+    await validate;
+    expect(type.validating).toBe(false);
+  });
 
-  type.setValue(10);
-  expect(type.meta.value).toBe(10);
+  test("validate const valid", async () => {
+    const type = Value.create({ ...config, const: 5 });
 
-  await type.validate();
+    type.setValue(5);
+    expect(type.meta.value).toBe(5);
 
-  expect(type.valid).toBe(false);
-  expect(type.errors!.slice(0)).toEqual([
-    "should be equal to one of the allowed values [5, 20]"
-  ]);
+    await type.validate();
+
+    expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
+
+  test("validate const invalid", async () => {
+    const type = Value.create({ ...config, const: 5 });
+
+    type.setValue(10);
+    expect(type.meta.value).toBe(10);
+
+    await type.validate();
+
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
+  });
+
+  test("validate enum valid", async () => {
+    const type = Value.create({ ...config, enum: [5, 10] });
+
+    type.setValue(5);
+    expect(type.meta.value).toBe(5);
+
+    await type.validate();
+
+    expect(type.valid).toBe(true);
+    expect(type.errors!.slice(0)).toEqual([]);
+  });
+
+  test("validate enum invalid", async () => {
+    const type = Value.create({ ...config, enum: [5, 20] });
+
+    type.setValue(10);
+    expect(type.meta.value).toBe(10);
+
+    await type.validate();
+
+    expect(type.valid).toBe(false);
+    expect(type.errors!.slice(0)).toEqual([
+      "should be equal to one of the allowed values [5, 20]"
+    ]);
+  });
 });

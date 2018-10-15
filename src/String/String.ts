@@ -103,7 +103,7 @@ export const StringMeta: IModelType<
     "color",
     "date",
     "password",
-    "date",
+    "datetime",
     "textarea",
     "time"
   ),
