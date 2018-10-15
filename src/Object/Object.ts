@@ -4,7 +4,7 @@ import { toJS } from "mobx";
 
 import { keys, unique } from "../utils";
 
-import { IAnything, IFieldErrors, mappings } from "../Common";
+import { IAnything, IFieldErrors, ILayout, mappings } from "../Common";
 
 import { IArray } from "../Array";
 
@@ -17,12 +17,17 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 export type IObjectComponent = "grid" | "layout" | "list";
 
 export interface IObjectMetaAttrs
-  extends IMetaAttrs<object | null, IObjectComponent> {}
+  extends IMetaAttrs<object | null, IObjectComponent> {
+  readonly layout?: ILayout | null;
+}
 
 export interface IObjectMetaConfig
-  extends IMetaConfig<object | null, IObjectComponent> {}
+  extends IMetaConfig<object | null, IObjectComponent>,
+    IObjectMetaAttrs {}
 
-export interface IObjectMeta extends IMeta<object | null, IObjectComponent> {}
+export interface IObjectMeta
+  extends IMeta<object | null, IObjectComponent>,
+    IObjectMetaAttrs {}
 
 export type IObjectType = "object";
 
@@ -78,7 +83,9 @@ export const ObjectMeta: IModelType<
     "layout",
     "list"
   ),
-  types.model({})
+  types.model({
+    layout: types.optional(types.frozen, null)
+  })
 );
 
 export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {

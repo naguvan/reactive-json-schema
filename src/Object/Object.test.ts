@@ -12,6 +12,7 @@ describe("Object testing", () => {
     meta: {
       component: "grid",
       help: "personal info",
+      layout: ["age", "name", ["age", ["name"]]],
       sequence: 5
     },
     properties: {
@@ -42,6 +43,7 @@ describe("Object testing", () => {
     expect(type.meta.component).toBe("layout");
     expect(type.meta.sequence).toBeNull();
     expect(type.meta.help).toBeNull();
+    expect(type.meta.layout).toBeNull();
   });
 
   test("test object meta", () => {
@@ -50,6 +52,7 @@ describe("Object testing", () => {
     expect(type.meta.component).toBe("grid");
     expect(type.meta.help).toBe("personal info");
     expect(type.meta.sequence).toBe(5);
+    expect(type.meta.layout).toEqual(["age", "name", ["age", ["name"]]]);
   });
 
   test("create object type", () => {

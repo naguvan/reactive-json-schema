@@ -14,4 +14,6 @@ export interface IOption<T> {
   value: T;
 }
 
+export type ILayout = Array<string | Array<string | Array<string | string[]>>>;
+
 export type __IModelType = IModelType<any, any>;

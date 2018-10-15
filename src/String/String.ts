@@ -19,8 +19,10 @@ export type IStringComponent =
   | "time"
   | "textarea";
 
-export interface IStringMetaAttrs
-  extends IMetaAttrs<string, IStringComponent> {}
+export interface IStringMetaAttrs extends IMetaAttrs<string, IStringComponent> {
+  readonly rows?: number | null;
+  readonly rowsMax?: number | null;
+}
 
 export interface IStringMetaConfig
   extends IMetaConfig<string, IStringComponent>,
@@ -107,7 +109,10 @@ export const StringMeta: IModelType<
     "textarea",
     "time"
   ),
-  types.model({})
+  types.model({
+    rows: types.maybe(types.number),
+    rowsMax: types.maybe(types.number)
+  })
 );
 
 // tslint:disable-next-line:variable-name
