@@ -529,8 +529,6 @@ describe("Object testing", () => {
 
     city.sync({ name: "manamadurai" });
 
-    //type.validate();
-
     expect(city.properties!.get("name")!.data).toBe("manamadurai");
     expect(city.properties!.get("name")!.valid).toBe(false);
     expect(toJS(city.properties!.get("name")!.errors)).toEqual([
