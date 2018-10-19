@@ -55,7 +55,8 @@ test("test valuefy", () => {
           age: {
             maximum: 10,
             meta: {
-              sequence: 2
+              sequence: 2,
+              value: 10
             },
             minimum: 3,
             title: "Age",
@@ -79,7 +80,8 @@ test("test valuefy", () => {
           },
           middle: {
             meta: {
-              sequence: 1
+              sequence: 1,
+              value: "sks"
             },
             minLength: 5,
             title: "Middle",
@@ -90,6 +92,9 @@ test("test valuefy", () => {
       },
       size: {
         maximum: 10,
+        meta: {
+          value: 20
+        },
         minimum: 3,
         multipleOf: 3,
         title: "Size",
@@ -117,12 +122,9 @@ test("test valuefy", () => {
     agree: true,
     array: [],
     name: {
-      age: 5,
       first: "naguvan",
-      last: "sk",
-      middle: "sk"
+      last: "sk"
     },
-    size: 5,
     title: "sk"
   };
 
@@ -130,12 +132,12 @@ test("test valuefy", () => {
 
   expect(type.properties!.agree.meta!.value).toBe(true);
   expect(type.properties!.array.meta!.value).toEqual([]);
-  expect(type.properties!.size.meta!.value).toBe(5);
+  expect(type.properties!.size.meta!.value).toBe(20);
   expect(type.properties!.title.meta!.value).toBe("sk");
 
   const name = type.properties!.name as IObjectConfig;
-  expect(name.properties!.age.meta!.value).toBe(5);
+  expect(name.properties!.age.meta!.value).toBe(10);
   expect(name.properties!.first.meta!.value).toBe("naguvan");
   expect(name.properties!.last.meta!.value).toBe("sk");
-  expect(name.properties!.middle.meta!.value).toBe("sk");
+  expect(name.properties!.middle.meta!.value).toBe("sks");
 });
