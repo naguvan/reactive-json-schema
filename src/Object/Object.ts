@@ -10,7 +10,7 @@ import { IArray } from "../Array";
 
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
-import { createType, IType, ITypeConfig } from "../Type";
+import { createType, IType, ITypeConfig, ITypeMetaProps } from "../Type";
 
 import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
@@ -30,6 +30,11 @@ export interface IObjectMeta
     IObjectMetaAttrs {}
 
 export type IObjectType = "object";
+
+export interface IObjectMetaProps extends IObjectMetaConfig {
+  readonly type: IObjectType;
+  readonly properties?: { [key: string]: ITypeMetaProps };
+}
 
 export interface IObjectAttrs extends IValueAttrs<object | null> {
   readonly required?: string[] | null;

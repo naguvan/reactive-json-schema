@@ -3,7 +3,7 @@ import { detach, IModelType, types } from "mobx-state-tree";
 import { observe, toJS } from "mobx";
 
 import { IAnything, IFieldErrors, mappings } from "../Common";
-import { createType, IType, ITypeConfig } from "../Type";
+import { createType, IType, ITypeConfig, ITypeMetaProps } from "../Type";
 import { isArray, unique } from "../utils";
 import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
@@ -25,6 +25,11 @@ export interface IArrayMeta
     IArrayMetaAttrs {}
 
 export type IArrayType = "array";
+
+export interface IArrayMetaProps extends IArrayMetaConfig {
+  readonly type: IArrayType;
+  readonly items?: ITypeMetaProps | ITypeMetaProps[] | null;
+}
 
 export interface IArrayAttrs extends IValueAttrs<Array<IAnything | null>> {
   readonly additionalItems?: boolean | null;
@@ -95,12 +100,6 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         types.model({
           additionalItems: types.maybe(types.boolean),
           elements: types.optional(types.array(types.late(createType)), []),
-          // items: types.maybe(
-          //     types.union(
-          //         types.late(createType),
-          //         types.array(types.late(createType))
-          //     )
-          // ),
           items: types.optional(types.frozen, null),
           maxItems: types.maybe(types.number),
           minItems: types.maybe(types.number),
@@ -114,9 +113,6 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
       }))
       .actions(it => ({
         updateIndexValue(index: number, value: IAnything | null): void {
-          // const values = [...it.value];
-          // values[index] = value;
-          // it.setValue(values);
           it.meta.value![index] = value;
           if (it.elements.length > index) {
             // TODO: Need to fix for all types
@@ -130,27 +126,15 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
       }))
       .actions(it => ({
         getConfig(value: IAnything | null, index: number, element: any): IType {
-          // const element = getSnapshot(it.items!);
           const Type = createType();
-          // console.info(value);
           const type = Type.create({
             ...element,
             meta: {
               value: toJS(value)
             }
           } as ITypeConfig);
-          // const type = clone(it.items as any);
-          // type.setValue(value);
           observe(type.meta, "value", changes => {
             it.updateIndexValue(index, type.meta.value as any);
-            // setTimeout(
-            //     () =>
-            //         it.updateIndexValue(
-            //             index,
-            //             type.value
-            //         ),
-            //     4
-            // );
           });
           return type;
         }
@@ -272,12 +256,6 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           return errors;
         },
         setValue(value: Array<IAnything | null>): void {
-          // (it as any).value = value;
-          // if (value) {
-          //     for (const [index, element] of it.elements.entries()) {
-          //         (element as any).setValue(value[index]);
-          //     }
-          // }
           it.meta.setValue(value);
           it.updateElements(toJS(value));
         }

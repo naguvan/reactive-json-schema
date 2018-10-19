@@ -22,6 +22,10 @@ export interface INumberMeta
 
 export type INumberType = "number";
 
+export interface INumberMetaProps extends INumberMetaConfig {
+  readonly type: INumberType;
+}
+
 export interface INumberAttrs extends IValueAttrs<number> {
   readonly minimum?: number | null;
   readonly maximum?: number | null;

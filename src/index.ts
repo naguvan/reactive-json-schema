@@ -8,3 +8,5 @@ export * from "./Object";
 export * from "./String";
 export * from "./Type";
 export * from "./Value";
+export * from "./utils/metafy";
+export * from "./utils/valuefy";

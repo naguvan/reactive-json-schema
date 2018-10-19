@@ -20,6 +20,10 @@ export interface IBooleanMeta
 
 export type IBooleanType = "boolean";
 
+export interface IBooleanMetaProps extends IBooleanMetaConfig {
+  readonly type: IBooleanType;
+}
+
 export interface IBooleanAttrs extends IValueAttrs<boolean> {}
 
 export interface IBooleanConfig

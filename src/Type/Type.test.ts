@@ -227,6 +227,9 @@ describe("type test cases", () => {
           type: "string"
         },
         name: {
+          meta: {
+            layout: [["first", "last"], "middle", "age"]
+          },
           properties: {
             age: {
               maximum: 10,
@@ -267,7 +270,6 @@ describe("type test cases", () => {
             }
           },
           type: "object"
-          // layout: [["first", "last"], "middle", "age"]
         },
         size: {
           maximum: 10,

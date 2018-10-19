@@ -20,6 +20,10 @@ export interface INullMeta
 
 export type INullType = "null";
 
+export interface INullMetaProps extends INullMetaConfig {
+  readonly type: INullType;
+}
+
 export interface INullAttrs extends IValueAttrs<null> {}
 
 export interface INullConfig

@@ -1,11 +1,19 @@
 import { IComplexType as IMobxType, types } from "mobx-state-tree";
 
-import { IArray, IArrayConfig } from "../Array";
-import { IBoolean, IBooleanConfig } from "../Boolean";
-import { INull, INullConfig } from "../Null";
-import { INumber, INumberConfig } from "../Number";
-import { IObject, IObjectConfig } from "../Object";
-import { IString, IStringConfig } from "../String";
+import { IArray, IArrayConfig, IArrayMetaProps } from "../Array";
+import { IBoolean, IBooleanConfig, IBooleanMetaProps } from "../Boolean";
+import { INull, INullConfig, INullMetaProps } from "../Null";
+import { INumber, INumberConfig, INumberMetaProps } from "../Number";
+import { IObject, IObjectConfig, IObjectMetaProps } from "../Object";
+import { IString, IStringConfig, IStringMetaProps } from "../String";
+
+export type ITypeMetaProps =
+  | IStringMetaProps
+  | INumberMetaProps
+  | IBooleanMetaProps
+  | INullMetaProps
+  | IObjectMetaProps
+  | IArrayMetaProps;
 
 export type ITypeConfig =
   | IStringConfig

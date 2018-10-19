@@ -66,6 +66,10 @@ export type IFormat =
 
 export type IStringType = "string";
 
+export interface IStringMetaProps extends IStringMetaConfig {
+  readonly type: IStringType;
+}
+
 export interface IStringAttrs extends IValueAttrs<string> {
   readonly minLength?: number | null;
   readonly maxLength?: number | null;

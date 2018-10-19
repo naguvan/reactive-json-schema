@@ -5,6 +5,8 @@ import { IModelType, ISimpleType, types } from "mobx-state-tree";
 export interface IMetaAttrs<V, T> {
   readonly component?: T | null;
   readonly help?: string | null;
+  readonly icon?: string | null;
+  readonly iconAlign?: "left" | "right" | "both" | null;
   readonly error?: string | null;
   readonly sequence?: number | null;
   readonly initial?: V | null;
@@ -55,6 +57,10 @@ export function createMeta<
       disabled: types.optional(types.boolean, false),
       error: types.maybe(types.string),
       help: types.maybe(types.string),
+      icon: types.maybe(types.string),
+      iconAlign: types.maybe(
+        types.enumeration("iconAlign", ["left", "right", "both"])
+      ),
       initial: types.optional(kind, defaultv),
       mandatory: types.optional(types.boolean, false),
       name: types.optional(types.string, ""),
