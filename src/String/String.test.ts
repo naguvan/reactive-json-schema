@@ -46,25 +46,25 @@ describe("type string test cases", () => {
     expect(type.data).toBe("rust");
   });
 
-  test("validate minLength valid", async () => {
+  test("validate minLength valid", () => {
     const type = String.create(config);
 
     type.setValue("java");
     expect(type.data).toBe("java");
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate minLength invalid", async () => {
+  test("validate minLength invalid", () => {
     const type = String.create(config);
 
     type.setValue("js");
     expect(type.data).toBe("js");
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -72,25 +72,25 @@ describe("type string test cases", () => {
     ]);
   });
 
-  test("validate maxLength valid", async () => {
+  test("validate maxLength valid", () => {
     const type = String.create(config);
 
     type.setValue("java");
     expect(type.data).toBe("java");
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate maxLength invalid", async () => {
+  test("validate maxLength invalid", () => {
     const type = String.create(config);
 
     type.setValue("typescript");
     expect(type.data).toBe("typescript");
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -107,7 +107,7 @@ describe("type string test cases", () => {
     ).toThrowError(`pattern '$%#%^%' is invalid.`);
   });
 
-  test("test valid pattern", async () => {
+  test("test valid pattern", () => {
     const type = String.create({
       ...config,
       maxLength: 8,
@@ -118,13 +118,13 @@ describe("type string test cases", () => {
     type.setValue("23:05:56");
     expect(type.data).toBe("23:05:56");
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("test invalid pattern", async () => {
+  test("test invalid pattern", () => {
     const type = String.create({
       ...config,
       maxLength: 8,
@@ -135,7 +135,7 @@ describe("type string test cases", () => {
     type.setValue("26:25:56");
     expect(type.data).toBe("26:25:56");
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -143,7 +143,7 @@ describe("type string test cases", () => {
     ]);
   });
 
-  test("validate format/meta component", async () => {
+  test("validate format/meta component", () => {
     const type = String.create({
       format: "date",
       meta: {

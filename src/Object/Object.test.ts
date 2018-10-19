@@ -106,7 +106,7 @@ describe("Object testing", () => {
     expect(city.properties!.get("name")!.type).toBe("string");
   });
 
-  test("validate config object value", async () => {
+  test("validate config object value", () => {
     const type = Object.create({ ...config });
     expect(type.data).toEqual({ age: 1, name: "naguvan" });
   });
@@ -138,25 +138,25 @@ describe("Object testing", () => {
     ).toThrowError(`required should not have duplicate properties`);
   });
 
-  test("validate minProperties valid", async () => {
+  test("validate minProperties valid", () => {
     const type = Object.create({ ...config, minProperties: 2 });
 
     type.setValue({ name: "naguvan", age: 1 });
     expect(type.data).toEqual({ name: "naguvan", age: 1 });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate minProperties invalid", async () => {
+  test("validate minProperties invalid", () => {
     const type = Object.create({ ...config, minProperties: 2 });
 
     type.setValue({ name: "naguvan" });
     expect(type.data).toEqual({ name: "naguvan", age: 1 });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -164,25 +164,25 @@ describe("Object testing", () => {
     ]);
   });
 
-  test("validate maxProperties valid", async () => {
+  test("validate maxProperties valid", () => {
     const type = Object.create({ ...config, maxProperties: 1 });
 
     type.setValue({ name: "naguvan" });
     expect(type.data).toEqual({ name: "naguvan", age: 1 });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate maxProperties invalid", async () => {
+  test("validate maxProperties invalid", () => {
     const type = Object.create({ ...config, maxProperties: 1 });
 
     type.setValue({ name: "naguvan", age: 1 });
     expect(type.data).toEqual({ name: "naguvan", age: 1 });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -190,7 +190,7 @@ describe("Object testing", () => {
     ]);
   });
 
-  test("validate required valid", async () => {
+  test("validate required valid", () => {
     const type = Object.create({
       properties: {
         age: {
@@ -218,13 +218,13 @@ describe("Object testing", () => {
     type.setValue({ name: "naguvan", age: 3 });
     expect(type.data).toEqual({ name: "naguvan", age: 3 });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate missing required properties", async () => {
+  test("validate missing required properties", () => {
     const type = Object.create({
       properties: {
         age: {
@@ -247,7 +247,7 @@ describe("Object testing", () => {
     type.setValue({ name: "naguvan" });
     expect(toJS(type.meta.value)).toEqual({ name: "naguvan" });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([]);
@@ -256,7 +256,7 @@ describe("Object testing", () => {
     ]);
   });
 
-  test("validate allowing additionalProperties", async () => {
+  test("validate allowing additionalProperties", () => {
     const type = Object.create({ ...config, additionalProperties: true });
 
     type.setValue({
@@ -272,13 +272,13 @@ describe("Object testing", () => {
       name: "naguvan"
     });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate not allowing additionalProperties", async () => {
+  test("validate not allowing additionalProperties", () => {
     const type = Object.create({ ...config, additionalProperties: false });
 
     type.setValue({
@@ -294,7 +294,7 @@ describe("Object testing", () => {
       name: "naguvan"
     });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -302,7 +302,7 @@ describe("Object testing", () => {
     ]);
   });
 
-  test("validate additionalProperties allowed types", async () => {
+  test("validate additionalProperties allowed types", () => {
     const type = Object.create({
       ...config,
       additionalProperties: { type: "string" }
@@ -321,13 +321,13 @@ describe("Object testing", () => {
       name: "naguvan"
     });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate additionalProperties not allowed types", async () => {
+  test("validate additionalProperties not allowed types", () => {
     const type = Object.create({
       ...config,
       additionalProperties: { type: "number" }
@@ -346,7 +346,7 @@ describe("Object testing", () => {
       name: "naguvan"
     });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([
@@ -355,7 +355,7 @@ describe("Object testing", () => {
     ]);
   });
 
-  test("validate additionalProperties allowed types with valid format", async () => {
+  test("validate additionalProperties allowed types with valid format", () => {
     const type = Object.create({
       ...config,
       additionalProperties: { type: "string", format: "email" }
@@ -372,13 +372,13 @@ describe("Object testing", () => {
       name: "naguvan"
     });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("get configured property", async () => {
+  test("get configured property", () => {
     const type = Object.create({
       ...config,
       additionalProperties: { type: "string", format: "email" }
@@ -398,7 +398,7 @@ describe("Object testing", () => {
     expect(type.getProperty("age")!.data).toBe(2);
   });
 
-  test("get configured property data", async () => {
+  test("get configured property data", () => {
     const type = Object.create({
       ...config,
       additionalProperties: { type: "string", format: "email" }
@@ -417,7 +417,7 @@ describe("Object testing", () => {
     expect(type.getProperty("age")!.data).toBe(32);
   });
 
-  test("get configured property data", async () => {
+  test("get configured property data", () => {
     const type = Object.create({
       properties: {
         age: {
@@ -456,13 +456,13 @@ describe("Object testing", () => {
     expect(type.getProperty("name")!.data).toBe("sk");
     expect(type.getProperty("age")!.data).toBe(32);
 
-    await type.validate();
+    type.validate();
 
     expect(type.getProperty("name")!.valid).toBe(false);
     expect(type.getProperty("age")!.valid).toBe(false);
   });
 
-  test("nested object type validation", async () => {
+  test("nested object type validation", () => {
     const type = Object.create({
       properties: {
         city: {
@@ -490,7 +490,7 @@ describe("Object testing", () => {
 
     type.setValue({ city: { name: "manamadurai" } });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
 
@@ -501,7 +501,7 @@ describe("Object testing", () => {
     ]);
   });
 
-  test("nested object type modification and validation", async () => {
+  test("nested object type modification and validation", () => {
     const type = Object.create({
       properties: {
         city: {
@@ -527,9 +527,9 @@ describe("Object testing", () => {
     expect(city).not.toBeNull();
     expect(city.title).toBe("city");
 
-    await city.sync({ name: "manamadurai" });
+    city.sync({ name: "manamadurai" });
 
-    // await type.validate();
+    //type.validate();
 
     expect(city.properties!.get("name")!.data).toBe("manamadurai");
     expect(city.properties!.get("name")!.valid).toBe(false);

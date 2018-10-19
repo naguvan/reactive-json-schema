@@ -59,8 +59,8 @@ export interface IArray
     > {
   readonly elements: IType[];
   readonly dynamic: boolean;
-  push(): Promise<void>;
-  remove(index: number): Promise<void>;
+  push(): void;
+  remove(index: number): void;
   getFieldErrors(): IFieldErrors;
   updateIndexValue(index: number, value: IAnything | null): void;
 }
@@ -163,24 +163,24 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           }
         },
 
-        async push(): Promise<void> {
+        push(): void {
           if (it.dynamic) {
             const meta = (it.items as IType).meta;
             const value = meta ? meta.default! : undefined;
             const index = it.meta.value!.length;
             it.updateIndexValue(index, value as any);
             it.elements.push(it.getConfig(value as any, index, it.items));
-            await it.validate();
+            it.validate();
           }
         },
 
-        async remove(index: number): Promise<void> {
+        remove(index: number): void {
           if (it.dynamic) {
             it.removeIndexValue(index);
             const element = it.elements![index];
             detach(element as any);
             // it.elements.splice(index, 1);
-            await it.validate();
+            it.validate();
           }
         }
       }))
@@ -196,38 +196,8 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
         }
       }))
       .actions(it => ({
-        async asyncValidate(value: Array<IAnything | null>): Promise<string[]> {
-          const errors = await it.asyncValidateBase(value);
-          if (it.elements !== null) {
-            for (const element of it.elements) {
-              await element.validate();
-            }
-            // if (isArray(it.items)) {
-            //     for (const item of it.items) {
-            //         await item.validate();
-            //     }
-            // } else if (value !== null) {
-            //     for (const element of it.elements) {
-            //         await element.validate();
-            //     }
-            //     for (const [index, item] of value.entries()) {
-            //         for (const error of await it.items.tryValidate(
-            //             item
-            //         )) {
-            //             errors.push(
-            //                 `data[${index}] ${error.replace(
-            //                     'Value ',
-            //                     ''
-            //                 )}`
-            //             );
-            //         }
-            //     }
-            // }
-          }
-          return errors;
-        },
-        syncValidate(value: Array<IAnything | null>): string[] {
-          const errors: string[] = it.syncValidateBase(value);
+        doValidate(value: Array<IAnything | null>): string[] {
+          const errors: string[] = it.doValidateBase(value);
           if (value === null) {
             return errors;
           }
@@ -251,6 +221,11 @@ export function createArray(): IModelType<Partial<IArrayConfig>, IArray> {
           ) {
             if (value.length > it.items.length) {
               errors.push(`should NOT have additional items`);
+            }
+          }
+          if (it.elements !== null) {
+            for (const element of it.elements) {
+              element.validate();
             }
           }
           return errors;

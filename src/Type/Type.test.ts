@@ -175,7 +175,7 @@ describe("type test cases", () => {
     expect(type.title).toBe("snapshot");
   });
 
-  test("form sample schema", async () => {
+  test("form sample schema", () => {
     const config: IObjectConfig = {
       properties: {
         agree: {
@@ -341,7 +341,7 @@ describe("type test cases", () => {
       type: 0
     });
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
 
@@ -374,7 +374,7 @@ describe("type test cases", () => {
       "should be equal to one of the allowed values [1, 2]"
     ]);
 
-    await type.sync({ agree: true, size: 6, name: { last: "kannapiran" } });
+    type.sync({ agree: true, size: 6, name: { last: "kannapiran" } });
 
     expect(type.getProperty("size")!.valid).toBe(true);
     expect(type.getProperty("agree")!.valid).toBe(true);
@@ -390,7 +390,7 @@ describe("type test cases", () => {
       }
     });
 
-    await type.sync({ title: "senthilnathan", type: 2 });
+    type.sync({ title: "senthilnathan", type: 2 });
 
     const options = type.getProperty("type")!.meta.options;
     expect(options).not.toBeFalsy();
@@ -400,15 +400,15 @@ describe("type test cases", () => {
     expect(type.getProperty("type")!.valid).toBe(true);
 
     const ipv4 = type.getProperty("ipv4")! as IString;
-    await ipv4.sync("12.45.67.70");
+    ipv4.sync("12.45.67.70");
 
     expect(type.getProperty("ipv4")!.valid).toBe(true);
 
-    await type.sync({ array: [{}] });
+    type.sync({ array: [{}] });
 
     const array = type.getProperty("array")! as IArray;
 
-    await array.push();
+    array.push();
 
     const item = array.elements[0] as IObject;
 
@@ -434,7 +434,7 @@ describe("type test cases", () => {
       ]
     });
 
-    await type.sync({
+    type.sync({
       name: { middle: "senthilnathan" }
     });
 
@@ -443,7 +443,7 @@ describe("type test cases", () => {
 
     expect(item.valid).toBe(false);
 
-    await type.validate();
+    type.validate();
 
     expect(item.valid).toBe(true);
 

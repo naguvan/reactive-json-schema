@@ -145,61 +145,60 @@ describe("value test cases", () => {
     expect(type.valid).toBe(true);
   });
 
-  test("check validating property", async () => {
+  test("check validating property", () => {
     const type = Value.create(config);
 
     expect(type.validating).toBe(false);
 
-    const validate = type.validate();
-    expect(type.validating).toBe(true);
+    type.validate();
 
-    await validate;
+    // expect(type.validating).toBe(true);
     expect(type.validating).toBe(false);
   });
 
-  test("validate const valid", async () => {
+  test("validate const valid", () => {
     const type = Value.create({ ...config, const: 5 });
 
     type.setValue(5);
     expect(type.meta.value).toBe(5);
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate const invalid", async () => {
+  test("validate const invalid", () => {
     const type = Value.create({ ...config, const: 5 });
 
     type.setValue(10);
     expect(type.meta.value).toBe(10);
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual(["should be equal to 5"]);
   });
 
-  test("validate enum valid", async () => {
+  test("validate enum valid", () => {
     const type = Value.create({ ...config, enum: [5, 10] });
 
     type.setValue(5);
     expect(type.meta.value).toBe(5);
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(true);
     expect(type.errors!.slice(0)).toEqual([]);
   });
 
-  test("validate enum invalid", async () => {
+  test("validate enum invalid", () => {
     const type = Value.create({ ...config, enum: [5, 20] });
 
     type.setValue(10);
     expect(type.meta.value).toBe(10);
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(false);
     expect(type.errors!.slice(0)).toEqual([

@@ -93,8 +93,8 @@ export const Number: IModelType<Partial<INumberConfig>, INumber> = types
     }
   }))
   .actions(it => ({
-    syncValidate(value: number): string[] {
-      const errors: string[] = it.syncValidateBase(value);
+    doValidate(value: number): string[] {
+      const errors: string[] = it.doValidateBase(value);
       if (it.minimum !== null && value < it.minimum) {
         errors.push(`should NOT be lesser than ${it.minimum}`);
       }

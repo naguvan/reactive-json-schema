@@ -218,39 +218,8 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
         }
       }))
       .actions(it => ({
-        async asyncValidate(
-          value: Map<string, object> | null
-        ): Promise<string[]> {
-          const errors = await it.asyncValidateBase(value);
-          if (
-            value !== null &&
-            it.additionalProperties !== null &&
-            typeof toJS(it.additionalProperties) !== "boolean"
-          ) {
-            const additionals = it.getAdditionals(value);
-            if (additionals.length > 0) {
-              const extratype = it.additionalProperties as IType;
-              for (const additional of additionals) {
-                for (const error of await extratype.tryValidate(
-                  value.get(additional)
-                )) {
-                  errors.push(
-                    `additional property '${additional}' ${error.replace(
-                      "Value ",
-                      ""
-                    )}`
-                  );
-                }
-              }
-            }
-          }
-          for (const property of it.getProperties()) {
-            await it.getProperty(property)!.validate();
-          }
-          return errors;
-        },
-        syncValidate(value: Map<string, object> | null): string[] {
-          const errors: string[] = it.syncValidateBase(value);
+        doValidate(value: Map<string, object> | null): string[] {
+          const errors: string[] = it.doValidateBase(value);
           if (value === null) {
             return errors;
           }
@@ -293,6 +262,33 @@ export function createObject(): IModelType<Partial<IObjectConfig>, IObject> {
               }
             }
           }
+
+          if (
+            value !== null &&
+            it.additionalProperties !== null &&
+            typeof toJS(it.additionalProperties) !== "boolean"
+          ) {
+            const additionals = it.getAdditionals(value);
+            if (additionals.length > 0) {
+              const extratype = it.additionalProperties as IType;
+              for (const additional of additionals) {
+                for (const error of extratype.tryValidate(
+                  value.get(additional)
+                )) {
+                  errors.push(
+                    `additional property '${additional}' ${error.replace(
+                      "Value ",
+                      ""
+                    )}`
+                  );
+                }
+              }
+            }
+          }
+          for (const property of it.getProperties()) {
+            it.getProperty(property)!.validate();
+          }
+
           return errors;
         },
         setValue(value: object | null): void {

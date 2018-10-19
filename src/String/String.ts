@@ -151,8 +151,8 @@ export const String: IModelType<Partial<IStringConfig>, IString> = types
     }
   }))
   .actions(it => ({
-    syncValidate(value: string): string[] {
-      const errors: string[] = it.syncValidateBase(value);
+    doValidate(value: string): string[] {
+      const errors: string[] = it.doValidateBase(value);
       if (it.minLength !== null && value.length < it.minLength) {
         errors.push(`should NOT be shorter than ${it.minLength} characters`);
       }

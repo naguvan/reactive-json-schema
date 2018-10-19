@@ -2,19 +2,19 @@
 
 import { IStringConfig, String } from "./String";
 
-async function test_format(
+function test_format(
   title: string,
   value: string,
   config: IStringConfig,
   result: boolean
 ) {
-  test(title, async () => {
+  test(title, () => {
     const type = String.create(config);
 
     type.setValue(value);
     expect(type.data).toBe(value);
 
-    await type.validate();
+    type.validate();
 
     expect(type.valid).toBe(result);
     expect(type.errors!.slice(0)).toEqual(

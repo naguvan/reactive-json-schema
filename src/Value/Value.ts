@@ -1,5 +1,5 @@
 import { toJS } from "mobx";
-import { flow, IModelType, types } from "mobx-state-tree";
+import { IModelType, types } from "mobx-state-tree";
 import { ISimpleType } from "mobx-state-tree";
 
 import { IAnything } from "../Common";
@@ -38,21 +38,19 @@ export interface IValue<
   setTitle(title: string): void;
 
   reset(): void;
-  validate(): Promise<void>;
+  validate(): void;
 
   addError(error: string): void;
   addErrors(errors: string[]): void;
   clearErrors(): void;
 
-  sync(value: V): Promise<void>;
+  sync(value: V): void;
 
   tryValue(value: IAnything): boolean;
-  tryValidate(value: IAnything | undefined | null): Promise<string[]>;
+  tryValidate(value: IAnything | undefined | null): string[];
 
-  asyncValidate(value: V): Promise<string[]>;
-  syncValidate(value: V): string[];
-  asyncValidateBase(value: V): Promise<string[]>;
-  syncValidateBase(value: V): string[];
+  doValidate(value: V): string[];
+  doValidateBase(value: V): string[];
 }
 
 export function createValue<
@@ -117,10 +115,7 @@ export function createValue<
       }
     }))
     .actions(it => ({
-      async asyncValidateBase(value: V): Promise<string[]> {
-        return [];
-      },
-      syncValidateBase(value: V): string[] {
+      doValidateBase(value: V): string[] {
         const errors: string[] = [];
         if (
           it.meta.mandatory !== null &&
@@ -147,24 +142,18 @@ export function createValue<
       }
     }))
     .volatile(it => ({
-      async asyncValidate(value: V): Promise<string[]> {
-        return await it.asyncValidateBase(value);
-      },
-      syncValidate(value: V): string[] {
-        return it.syncValidateBase(value);
+      doValidate(value: V): string[] {
+        return it.doValidateBase(value);
       }
     }))
     .volatile(it => ({
-      async tryValidate(
-        value: IAnything | undefined | null
-      ): Promise<string[]> {
+      tryValidate(value: IAnything | undefined | null): string[] {
         const validities = kind.validate(value, []);
         const errors: string[] = validities
           .map(validity => validity.message!)
           .filter(message => !!message);
         if (errors.length === 0) {
-          errors.push(...it.syncValidate(value as V));
-          errors.push(...(await it.asyncValidate(value as V)));
+          errors.push(...it.doValidate(value as V));
         }
         return errors;
       }
@@ -199,15 +188,15 @@ export function createValue<
         it.meta.setValue(it.meta.initial as V);
         it.clearErrors();
       },
-      validate: flow<void>(function*() {
+      validate() {
         if (it.syncing /*|| it.validating*/) {
           return [];
         }
         it.clearErrors();
         it._validating = true;
-        it.addErrors(yield it.tryValidate(it.meta.value));
+        it.addErrors(it.tryValidate(it.meta.value));
         it._validating = false;
-      })
+      }
     }))
     .actions(it => ({
       // protected only method
@@ -216,12 +205,12 @@ export function createValue<
       }
     }))
     .actions(it => ({
-      async sync(value: V): Promise<void> {
+      sync(value: V): void {
         if (!it.syncing) {
           it.syncing = true;
           it.setValue(value);
           it.syncing = false;
-          await it.validate();
+          it.validate();
         }
       }
     }));
