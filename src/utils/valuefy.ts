@@ -3,6 +3,9 @@ import { ITypeConfig } from "../Type";
 import { isArray, isUndefined, keys } from "./common";
 
 export function valuefy(type: ITypeConfig, value: any): ITypeConfig {
+  if (isUndefined(value)) {
+    return type;
+  }
   switch (type.type) {
     case "object": {
       const { properties = {} } = type;
