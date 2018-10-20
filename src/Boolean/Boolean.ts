@@ -6,7 +6,7 @@ import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
 import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
-export type IBooleanComponent = "radio" | "checkbox" | "switch";
+export type IBooleanComponent = "radios" | "checkbox" | "switch" | "select";
 
 export interface IBooleanMetaAttrs
   extends IMetaAttrs<boolean, IBooleanComponent> {}
@@ -53,9 +53,10 @@ export const BooleanMeta: IModelType<
   createMeta<boolean, IBooleanComponent, IBooleanMetaConfig, IBooleanMeta>(
     types.boolean,
     false,
-    "radio",
+    "radios",
     "checkbox",
-    "switch"
+    "switch",
+    "select"
   ),
   types.model({})
 );

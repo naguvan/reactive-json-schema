@@ -7,7 +7,12 @@ import { createValue, IValue, IValueAttrs, IValueConfig } from "../Value";
 
 import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
-export type INumberComponent = "text" | "range" | "slide";
+export type INumberComponent =
+  | "number"
+  | "range"
+  | "radios"
+  | "text"
+  | "select";
 
 export interface INumberMetaAttrs
   extends IMetaAttrs<number, INumberComponent> {}
@@ -59,9 +64,11 @@ export const NumberMeta: IModelType<
   createMeta<number, INumberComponent, INumberMetaConfig, INumberMeta>(
     types.number,
     0,
-    "text",
+    "number",
     "range",
-    "slide"
+    "radios",
+    "text",
+    "select"
   ),
   types.model({})
 );

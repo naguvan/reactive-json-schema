@@ -11,7 +11,7 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 
 import { IObject } from "../Object";
 
-export type IArrayComponent = "list" | "layout";
+export type IArrayComponent = "list" | "layout" | "checkboxes";
 
 export interface IArrayMetaAttrs
   extends IMetaAttrs<Array<IAnything | null>, IArrayComponent> {}
@@ -79,7 +79,7 @@ export const ArrayMeta: IModelType<
     IArrayComponent,
     IArrayMetaConfig,
     IArrayMeta
-  >(types.array(types.frozen), [], "list", "layout"),
+  >(types.array(types.frozen), [], "list", "layout", "checkboxes"),
   types.model({})
 );
 

@@ -3,7 +3,7 @@ import { Boolean, IBooleanConfig } from "./Boolean";
 describe("Boolean testing", () => {
   const config: IBooleanConfig = {
     meta: {
-      component: "radio",
+      component: "radios",
       sequence: 40,
       value: true
     },
@@ -22,7 +22,7 @@ describe("Boolean testing", () => {
   test("test boolean meta", () => {
     const type = Boolean.create(config);
     expect(type.meta).not.toBeNull();
-    expect(type.meta.component).toBe("radio");
+    expect(type.meta.component).toBe("radios");
     expect(type.meta.help).toBeNull();
     expect(type.meta.sequence).toBe(40);
   });
