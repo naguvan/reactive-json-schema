@@ -25,6 +25,11 @@ describe("Boolean testing", () => {
     expect(type.meta.component).toBe("radios");
     expect(type.meta.help).toBeNull();
     expect(type.meta.sequence).toBe(40);
+    expect(type.enum).toEqual([true, false]);
+    expect(type.meta.options).toEqual([
+      { label: "true", value: true },
+      { label: "false", value: false }
+    ]);
   });
 
   test("create boolean type", () => {

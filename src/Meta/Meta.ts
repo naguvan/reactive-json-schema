@@ -8,6 +8,7 @@ export interface IMetaAttrs<V, T> {
   readonly icon?: string | null;
   readonly iconAlign?: "left" | "right" | "both" | null;
   readonly error?: string | null;
+  readonly row?: boolean | null;
   readonly sequence?: number | null;
   readonly initial?: V | null;
   readonly value?: V | null;
@@ -67,6 +68,7 @@ export function createMeta<
       options: types.maybe(
         types.array(types.model({ label: types.string, value: kind }))
       ),
+      row: types.maybe(types.boolean),
       sequence: types.maybe(types.number),
       value: types.optional(kind, defaultv),
       visible: types.optional(types.boolean, true)

@@ -96,7 +96,7 @@ export function createValue<
           it.meta.setName(title.toLowerCase().replace(" ", "-"));
         }
         if (
-          it.enum != null &&
+          it.enum &&
           it.enum.length > 0 &&
           (!it.meta.options || it.meta.options.length === 0)
         ) {
@@ -128,7 +128,7 @@ export function createValue<
           errors.push(`should be equal to ${it.const}`);
         }
         if (
-          it.enum != null &&
+          it.enum &&
           it.enum.length > 0 &&
           it.enum.findIndex(en => en === value) === -1
         ) {

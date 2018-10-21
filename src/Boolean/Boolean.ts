@@ -62,20 +62,57 @@ export const BooleanMeta: IModelType<
 );
 
 // tslint:disable-next-line:variable-name
-export const Boolean: IModelType<
-  Partial<IBooleanConfig>,
-  IBoolean
-> = types.compose(
-  "Boolean",
-  createValue<
-    boolean,
-    IBooleanType,
-    IBooleanComponent,
-    IBooleanMetaConfig,
-    IBooleanMeta
-  >("boolean", types.boolean, false, BooleanMeta, { component: "switch" }),
-  types.model({})
-);
+export const Boolean: IModelType<Partial<IBooleanConfig>, IBoolean> = types
+  .compose(
+    "Boolean",
+    createValue<
+      boolean,
+      IBooleanType,
+      IBooleanComponent,
+      IBooleanMetaConfig,
+      IBooleanMeta
+    >("boolean", types.boolean, false, BooleanMeta, { component: "switch" }),
+    types.model({})
+  )
+  .actions(it => ({
+    afterCreate() {
+      if (it.enum) {
+        if (!(it.enum.length === 2)) {
+          throw new TypeError(
+            `boolean enum should be two values. '${it.enum}' is invalid.`
+          );
+        }
+        if (it.enum[0] !== true && it.enum[0] !== false) {
+          throw new TypeError(
+            `boolean enum should have either 'true' or 'false'`
+          );
+        }
+        if (it.enum[1] !== true && it.enum[1] !== false) {
+          throw new TypeError(
+            `boolean enum should have either 'true' or 'false'`
+          );
+        }
+      }
+      const { component } = it.meta;
+      if (
+        (component === "select" || component === "radios") &&
+        (!it.enum || it.enum.length === 0)
+      ) {
+        (it as any).enum = [true, false];
+      }
+      if (
+        it.enum &&
+        it.enum.length > 0 &&
+        (!it.meta.options || it.meta.options.length === 0)
+      ) {
+        const options = it.enum.map(option => ({
+          label: String(option),
+          value: option
+        }));
+        it.meta.setOptions(options);
+      }
+    }
+  }));
 
 mappings.boolean = Boolean;
 
