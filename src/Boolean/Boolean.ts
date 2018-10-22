@@ -9,9 +9,7 @@ import { createMeta, IMeta, IMetaAttrs, IMetaConfig } from "../Meta";
 export type IBooleanComponent = "radios" | "checkbox" | "switch" | "select";
 
 export interface IBooleanMetaAttrs
-  extends IMetaAttrs<boolean, IBooleanComponent> {
-  readonly step?: number | null;
-}
+  extends IMetaAttrs<boolean, IBooleanComponent> {}
 
 export interface IBooleanMetaConfig
   extends IMetaConfig<boolean, IBooleanComponent>,
@@ -61,9 +59,7 @@ export const BooleanMeta: IModelType<
     "switch",
     "select"
   ),
-  types.model({
-    step: types.maybe(types.number)
-  })
+  types.model({})
 );
 
 // tslint:disable-next-line:variable-name

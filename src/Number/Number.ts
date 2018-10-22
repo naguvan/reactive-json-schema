@@ -14,8 +14,9 @@ export type INumberComponent =
   | "text"
   | "select";
 
-export interface INumberMetaAttrs
-  extends IMetaAttrs<number, INumberComponent> {}
+export interface INumberMetaAttrs extends IMetaAttrs<number, INumberComponent> {
+  readonly step?: number | null;
+}
 
 export interface INumberMetaConfig
   extends IMetaConfig<number, INumberComponent>,
@@ -70,7 +71,9 @@ export const NumberMeta: IModelType<
     "text",
     "select"
   ),
-  types.model({})
+  types.model({
+    step: types.maybe(types.number)
+  })
 );
 
 // tslint:disable-next-line:variable-name

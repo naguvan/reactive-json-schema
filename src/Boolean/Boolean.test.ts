@@ -5,7 +5,6 @@ describe("Boolean testing", () => {
     meta: {
       component: "radios",
       sequence: 40,
-      step: 5,
       value: true
     },
     title: "naguvan",
@@ -39,7 +38,6 @@ describe("Boolean testing", () => {
     expect(type.title).toBe("naguvan");
     expect(type.data).toBe(true);
     expect(type.meta.value).toBe(true);
-    expect(type.meta.step).toBe(5);
   });
 
   test("change boolean name type", () => {

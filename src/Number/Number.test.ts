@@ -6,6 +6,7 @@ describe("Number testing", () => {
       component: "range",
       help: "age selector",
       sequence: 10,
+      step: 5,
       value: 50
     },
     title: "naguvan",
@@ -27,6 +28,7 @@ describe("Number testing", () => {
     expect(type.meta.help).toBe("age selector");
     expect(type.meta.sequence).toBe(10);
     expect(type.meta.initial).toBe(50);
+    expect(type.meta.step).toBe(5);
   });
 
   test("create number type", () => {
