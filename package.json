@@ -1,6 +1,6 @@
 {
   "name": "reactive-json-schema",
-  "version": "2.0.0-beta9",
+  "version": "2.0.0-beta10",
   "description": "reactive json schema validator using mobx-state-tree",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -62,17 +62,17 @@
   "devDependencies": {
     "@types/jest": "23.3.5",
     "cross-env": "5.2.0",
-    "husky": "1.1.1",
+    "husky": "1.1.2",
     "jest": "23.6.0",
     "prettier": "1.14.3",
-    "pretty-quick": "1.7.0",
+    "pretty-quick": "1.8.0",
     "rimraf": "2.6.2",
     "ts-jest": "23.10.4",
-    "ts-loader": "5.2.1",
+    "ts-loader": "5.2.2",
     "ts-node": "7.0.1",
     "tslint": "5.11.0",
     "tslint-config-prettier": "1.15.0",
     "tslint-loader": "3.5.4",
-    "typescript": "3.1.2"
+    "typescript": "3.1.3"
   }
 }
