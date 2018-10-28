@@ -1,6 +1,6 @@
 {
   "name": "reactive-json-schema",
-  "version": "2.0.0-beta11",
+  "version": "2.0.0-beta12",
   "description": "reactive json schema validator using mobx-state-tree",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -60,7 +60,7 @@
     "mobx-state-tree": "2.2.0"
   },
   "devDependencies": {
-    "@types/jest": "23.3.5",
+    "@types/jest": "23.3.8",
     "cross-env": "5.2.0",
     "husky": "1.1.2",
     "jest": "23.6.0",

@@ -6,7 +6,7 @@ export interface IMetaAttrs<V, T> {
   readonly component?: T | null;
   readonly help?: string | null;
   readonly icon?: string | null;
-  readonly iconAlign?: "left" | "right" | "both" | null;
+  readonly iconAlign?: "start" | "end" | null;
   readonly error?: string | null;
   readonly row?: boolean | null;
   readonly sequence?: number | null;
@@ -59,8 +59,9 @@ export function createMeta<
       error: types.maybe(types.string),
       help: types.maybe(types.string),
       icon: types.maybe(types.string),
-      iconAlign: types.maybe(
-        types.enumeration("iconAlign", ["left", "right", "both"])
+      iconAlign: types.optional(
+        types.enumeration("iconAlign", ["start", "end"]),
+        "start"
       ),
       initial: types.optional(kind, defaultv),
       mandatory: types.optional(types.boolean, false),
